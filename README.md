@@ -6,12 +6,14 @@ Install and run
 
 ``
 npm install
+``
+``
 npm run
 ``
 
 Using as a sitemap generator
 
-``
+```
 // File write library
 fs = require('fs');
 // Web crawler instance
@@ -26,4 +28,4 @@ crawler.run(startingUrl, "sitemap", (sitemap) => {
         if (err) return console.log(err);
     })
 })
-``
+```
