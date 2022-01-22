@@ -7,13 +7,14 @@ Install and run
 ``
 npm install
 ``
+
 ``
 npm run
 ``
 
 Using as a sitemap generator
 
-```
+```javascript
 // File write library
 fs = require('fs');
 // Web crawler instance
