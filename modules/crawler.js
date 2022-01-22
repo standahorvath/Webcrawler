@@ -23,7 +23,7 @@ module.exports = {
                 if (callback !== null && typeof callback == "function") {
                     callback(sitemap)
                 }
-            }, true, true, 3)
+            }, true, true, 16)
 
         })
     },
