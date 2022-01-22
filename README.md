@@ -4,17 +4,14 @@ Multipurpose Webcrawler - Developer web tool
 ## How use it
 Install and run
 
-``
+```console
 npm install
-``
-
-``
 npm run
-``
+```
 
 Using as a sitemap generator
 
-```javascript
+```js
 // File write library
 fs = require('fs');
 // Web crawler instance
