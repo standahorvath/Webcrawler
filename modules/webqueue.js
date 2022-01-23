@@ -23,9 +23,9 @@ Webqueue.prototype.log = function log() {
  */
 Webqueue.prototype.loadAll = function loadAll(callback = null, followNewLinks = false, sameOrigin = true, threads = 3) {
     // Create all of threads
-    for(let t = 0; t < threads; t++){
+    for (let t = 0; t < threads; t++) {
         this.usedThreads++
-        this.createThread(callback, followNewLinks, sameOrigin, t, true)
+            this.createThread(callback, followNewLinks, sameOrigin, t, true)
     }
 };
 
@@ -39,36 +39,37 @@ Webqueue.prototype.loadAll = function loadAll(callback = null, followNewLinks = 
 Webqueue.prototype.createThread = function createThread(callback = null, followNewLinks = false, sameOrigin = true, threadID = 0, debug = false) {
 
     // Foreach all of queue WebPages
-    for(let i = 0; i < this.queue.length; i++){
+    for (let i = 0; i < this.queue.length; i++) {
         // If is webpage valid and not loaded
-        if(!this.queue[i].loaded &&!this.queue[i].loading && this.queue[i].isValid()) {
+        if (!this.queue[i].loaded && !this.queue[i].loading && this.queue[i].isValid()) {
             // then download it
-            if(debug) console.log("\x1b[32m[Thread "+threadID+"][Request] \x1b[37m" + this.queue[i].url)
-            this.queue[i].load((content, webpage)=>{
+            if (debug) console.log("\x1b[32m[Thread " + threadID + "][Request] \x1b[37m" + this.queue[i].url)
+            this.queue[i].load((content, webpage) => {
                 // Success
                 let localLinks = []
                 let absoluteLinks = []
-                // if is folow new links enabled
-                if(followNewLinks){
+                    // if is folow new links enabled
+                if (followNewLinks) {
                     // if keep in same origin
                     localLinks = webpage.getLocalLinks(true, null)
                     absoluteLinks = webpage.getAbsoluteLinks(sameOrigin, null)
                     this.enqueue(localLinks)
                     this.enqueue(absoluteLinks)
                 }
-                if(debug) console.log("\x1b[32m[Thread "+threadID+"][Downloaded] \x1b[37m" + webpage.url + "\x1b[33m found "+(localLinks.length+absoluteLinks.length)+" links")
-                this.createThread(callback, followNewLinks, sameOrigin,  threadID, debug)
-            }, (reason, webpage)=>{ // TODO FAILED
-                if(debug) console.log("\x1b[31m[Thread "+threadID+"][Failed] \x1b[37m" + webpage.url)
-                this.createThread(callback, followNewLinks, sameOrigin,  threadID, debug)
+                if (debug) console.log("\x1b[32m[Thread " + threadID + "][Downloaded] \x1b[37m" + webpage.url + "\x1b[33m found " + (localLinks.length + absoluteLinks.length) + " links")
+                this.createThread(callback, followNewLinks, sameOrigin, threadID, debug)
+            }, (reason, webpage) => { // TODO FAILED
+                if (debug) console.log("\x1b[31m[Thread " + threadID + "][Failed] \x1b[37m" + webpage.url)
+                console.log(reason)
+                this.createThread(callback, followNewLinks, sameOrigin, threadID, debug)
             })
             return
         }
     }
 
     this.usedThreads--
-    if(debug) console.log("\x1b[32m[Threads] \x1b[37m"+this.usedThreads)
-    if(this.usedThreads == 0){
+        if (debug) console.log("\x1b[32m[Threads] \x1b[37m" + this.usedThreads)
+    if (this.usedThreads == 0) {
         callback()
     }
 };
@@ -115,7 +116,7 @@ Webqueue.prototype.toSitemap = function toSitemap() {
 
 
     for (let i = 0; i < this.queue.length; i++) {
-        if(this.queue[i].isValid()){
+        if (this.queue[i].isValid()) {
             content += '<url>\r\n';
             content += '<loc>' + this.queue[i].url + '</loc>\r\n';
             content += '<lastmod>' + new Date().toISOString() + '</lastmod>\r\n';

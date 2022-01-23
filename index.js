@@ -15,10 +15,8 @@ crawler.run(startingUrl, "sitemap", (sitemap) => {
 })
 */
 
-let startingUrl = "https://www.blizzard.com"
+let startingUrl = "https://www.registav.cz"
 
-crawler.run(startingUrl, "sitemap", (sitemap) => {
-    fs.writeFile('./sitemap.xml', sitemap, 'utf8', function (err) {
-        if (err) return console.log(err);
-    })
+crawler.run(startingUrl, "downloadsite", { folder: "./download/" }, () => {
+    console.log("Finish")
 })
