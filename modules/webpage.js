@@ -260,4 +260,15 @@ Webpage.prototype.getAbsoluteLinks = function getAbsoluteLinks(sameOrigin = fals
     return links.filter((value, index, self) => { return self.indexOf(value) === index });
 };
 
+Webpage.prototype.getAssets = function(sameOrigin = false) {
+    let links = []
+    let extensions = ["css", "js", "jpg", "jpeg", "png", "svg"]
+
+    let relativeAssets = sameOrigin ? this.getLocalLinks(true, extensions) : []
+    let absoluteAssets = this.getAbsoluteLinks(sameOrigin, extensions)
+
+    links = links.concat(relativeAssets, absoluteAssets)
+    return links
+}
+
 module.exports = Webpage;

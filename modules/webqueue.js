@@ -1,4 +1,5 @@
 const Webpage = require('./webpage.js')
+const Webasset = require('./webasset.js')
 const fs = require('fs')
 
 function Webqueue() {
@@ -74,9 +75,14 @@ Webqueue.prototype.createThread = function createThread(callback = null, followN
     }
 };
 
-Webqueue.prototype.enqueue = function enqueue(url = []) {
+Webqueue.prototype.enqueue = function enqueue(url = [], type = "webpage") {
+    let t_web = null
     if (typeof url == "string") {
-        let t_web = new Webpage(url)
+        if (type == "webpage") {
+            t_web = new Webpage(url)
+        } else if (type == "asset") {
+            t_web = new Webasset(url)
+        }
         if (t_web.isValid) {
             let found = false
             for (let i = 0; i < this.queue.length; i++) {
@@ -88,7 +94,11 @@ Webqueue.prototype.enqueue = function enqueue(url = []) {
         }
     } else {
         for (let j = 0; j < url.length; j++) {
-            let t_web = new Webpage(url[j])
+            if (type == "webpage") {
+                t_web = new Webpage(url[j])
+            } else if (type == "asset") {
+                t_web = new Webasset(url[j])
+            }
             if (t_web.isValid) {
                 let found = false
                 for (let i = 0; i < this.queue.length; i++) {
