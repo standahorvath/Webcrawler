@@ -1,4 +1,6 @@
 const urlContent = require('url-content');
+const http = require('http');
+const https = require('https');
 const regex = require('./regex.js')
 
 function Webasset(url) {
@@ -54,6 +56,21 @@ Webasset.prototype.compare = function compare(compareUrl) {
 
 Webasset.prototype.load = function load(callback, failed = null) {
     this.loading = true
+
+
+    if (this.url.startsWith("https")) {
+        const request = https.get(this.url, (res) => {
+            //response.pipe(file);
+            console.log(res)
+        });
+    } else {
+        const request = http.get(this.url, (res) => {
+            //response.pipe(file);
+            console.log(res)
+        });
+    }
+
+    /*
     urlContent.getContent(this.url).then(content => {
         this.content = content
         this.loaded = true
@@ -69,6 +86,8 @@ Webasset.prototype.load = function load(callback, failed = null) {
             failed(error, this)
         }
     });
+    */
+
 };
 
 Webasset.prototype.getFilename = function(withQuery = false) {
