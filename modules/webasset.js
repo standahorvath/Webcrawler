@@ -2,6 +2,7 @@ const urlContent = require('url-content');
 const http = require('http');
 const https = require('https');
 const regex = require('./regex.js')
+const fs = require("fs");
 
 function Webasset(url) {
 
@@ -13,8 +14,12 @@ function Webasset(url) {
     this.loaded = false;
     this.loading = false;
     this.valid = true;
+    this.downloadFolder = "./download"
 };
 
+Webasset.prototype.setDownloadFolder = function setDownloadFolder(folder) {
+    this.downloadFolder = folder
+};
 
 Webasset.prototype.isValid = function isValid() {
     return this.valid
@@ -60,13 +65,21 @@ Webasset.prototype.load = function load(callback, failed = null) {
 
     if (this.url.startsWith("https")) {
         const request = https.get(this.url, (res) => {
-            //response.pipe(file);
-            console.log(res)
+            const writeStream = fs.createWriteStream(this.downloadFolder + this.getFilename());
+            res.pipe(writeStream);
+            writeStream.on("finish", () => {
+                writeStream.close()
+                callback(null, this)
+            });
         });
     } else {
         const request = http.get(this.url, (res) => {
-            //response.pipe(file);
-            console.log(res)
+            const writeStream = fs.createWriteStream(this.downloadFolder + this.getFilename());
+            res.pipe(writeStream);
+            writeStream.on("finish", () => {
+                writeStream.close()
+                callback(null, this)
+            });
         });
     }
 

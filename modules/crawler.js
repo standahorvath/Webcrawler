@@ -63,41 +63,42 @@ module.exports = {
 
                 }
 
+
+                for (let i = 0; i < assetsWebqueue.queue.length; i++) {
+
+                    if (!assetsWebqueue.queue[i].isValid()) continue
+
+                    let dir = options.folder
+                        // If directory doesnt ends with / then adds it
+                    if (!dir.endsWith("/")) dir += "/"
+
+                    // Make folder path from url path
+                    let indexFolder = assetsWebqueue.queue[i].url.replace(assetsWebqueue.queue[i].getOrigin(), "")
+                    indexFolder = indexFolder.replace(assetsWebqueue.queue[i].getFilename(true), "")
+                        // If path starts with / then remove it, we dont need it
+                    while (indexFolder.startsWith("/")) {
+                        indexFolder = indexFolder.substring(1)
+                    }
+
+                    // put together
+                    dir += indexFolder
+
+                    // if path doesnt have slash at and, then add it
+                    if (!dir.endsWith("/")) dir += "/"
+
+                    if (!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir, { recursive: true });
+                    }
+
+                    assetsWebqueue.queue[i].setDownloadFolder(dir)
+
+
+                }
+
+
                 // Load all assets
                 assetsWebqueue.loadAll(() => {
-
-                    for (let i = 0; i < assetsWebqueue.queue.length; i++) {
-
-                        if (!assetsWebqueue.queue[i].isValid()) continue
-
-                        let dir = options.folder
-                            // If directory doesnt ends with / then adds it
-                        if (!dir.endsWith("/")) dir += "/"
-
-                        // Make folder path from url path
-                        let indexFolder = assetsWebqueue.queue[i].url.replace(assetsWebqueue.queue[i].getOrigin(), "")
-                        indexFolder = indexFolder.replace(assetsWebqueue.queue[i].getFilename(true), "")
-                            // If path starts with / then remove it, we dont need it
-                        while (indexFolder.startsWith("/")) {
-                            indexFolder = indexFolder.substring(1)
-                        }
-
-                        // put together
-                        dir += indexFolder
-
-                        // if path doesnt have slash at and, then add it
-                        if (!dir.endsWith("/")) dir += "/"
-
-                        if (!fs.existsSync(dir)) {
-                            fs.mkdirSync(dir, { recursive: true });
-                        }
-
-                        // Save into folder as html
-                        fs.writeFile(dir + assetsWebqueue.queue[i].getFilename(), assetsWebqueue.queue[i].content, 'utf8', function(err) {
-                            if (err) return console.log(err);
-                        })
-
-                    }
+                    console.log("Download finished")
                 }, false, false, 16)
 
 
