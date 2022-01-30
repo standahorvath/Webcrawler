@@ -17,6 +17,18 @@ function Webasset(url) {
     this.downloadFolder = "./download"
 };
 
+Webasset.prototype.getFolderPath = function getFolderPath() {
+    // Make folder path from url path
+    let indexFolder = this.url.replace(this.getOrigin(), "")
+        // If path starts with / then remove it, we dont need it
+    while (indexFolder.startsWith("/")) {
+        indexFolder = indexFolder.substring(1)
+    }
+    indexFolder = indexFolder.replace(new RegExp("\\?", 'g'), '__')
+    indexFolder = indexFolder.replace(new RegExp("=", 'g'), '-')
+    return indexFolder
+};
+
 Webasset.prototype.setDownloadFolder = function setDownloadFolder(folder) {
     this.downloadFolder = folder
 };

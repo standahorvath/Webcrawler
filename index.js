@@ -15,8 +15,18 @@ crawler.run(startingUrl, "sitemap", (sitemap) => {
 })
 */
 
-let startingUrl = "https://www.registav.cz"
+/* Downloading all site */
+/*
+let startingUrl = "https://www.luxor.cz"
 
 crawler.run(startingUrl, "downloadsite", { folder: "./download/" }, () => {
+    console.log("Finish")
+})
+*/
+
+
+let startingUrl = "https://www.razer.com"
+
+crawler.run(startingUrl, "downloadassets", { folder: "./download/", extensions: ['jpg', 'jpeg', 'png', 'gif'] }, () => {
     console.log("Finish")
 })

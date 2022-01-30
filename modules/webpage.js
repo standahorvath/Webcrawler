@@ -13,6 +13,18 @@ function Webpage(url) {
     this.valid = true;
 };
 
+Webpage.prototype.getFolderPath = function getFolderPath() {
+    // Make folder path from url path
+    let indexFolder = this.url.replace(this.getOrigin(), "")
+        // If path starts with / then remove it, we dont need it
+    while (indexFolder.startsWith("/")) {
+        indexFolder = indexFolder.substring(1)
+    }
+    indexFolder = indexFolder.replace(new RegExp("\\?", 'g'), '__')
+    indexFolder = indexFolder.replace(new RegExp("=", 'g'), '-')
+    return indexFolder
+};
+
 Webpage.prototype.log = function log() {
     console.log(this.url)
 };
@@ -260,9 +272,8 @@ Webpage.prototype.getAbsoluteLinks = function getAbsoluteLinks(sameOrigin = fals
     return links.filter((value, index, self) => { return self.indexOf(value) === index });
 };
 
-Webpage.prototype.getAssets = function(sameOrigin = false) {
+Webpage.prototype.getAssets = function(sameOrigin = false, extensions = ["css", "js", "jpg", "jpeg", "png", "svg"]) {
     let links = []
-    let extensions = ["css", "js", "jpg", "jpeg", "png", "svg"]
 
     let relativeAssets = sameOrigin ? this.getLocalLinks(true, extensions) : []
     let absoluteAssets = this.getAbsoluteLinks(sameOrigin, extensions)
