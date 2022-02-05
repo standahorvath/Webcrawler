@@ -25,7 +25,7 @@ crawler.run(startingUrl, "downloadsite", { folder: "./download/" }, () => {
 */
 
 
-let startingUrl = "https://ceskamincovna.cz/darky-389-p/"
+let startingUrl = "https://ceskamincovna.cz/"
 
 crawler.run(startingUrl, "downloadassets", { folder: "./download/", extensions: ['jpg', 'jpeg', 'png', 'gif'] }, () => {
     console.log("Finish")

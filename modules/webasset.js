@@ -74,6 +74,7 @@ Webasset.prototype.compare = function compare(compareUrl) {
 Webasset.prototype.load = function load(callback, failed = null) {
     this.loading = true
 
+    try {
 
     if (this.url.startsWith("https")) {
         const request = https.get(this.url, (res) => {
@@ -95,6 +96,11 @@ Webasset.prototype.load = function load(callback, failed = null) {
                 callback(null, this)
             });
         });
+    }
+
+    }
+    catch(exception){
+        if(failed !== null) failed(exeption, this)
     }
 
     /*

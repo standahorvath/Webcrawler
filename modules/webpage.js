@@ -207,7 +207,7 @@ Webpage.prototype.getLocalLinks = function getLocalLinks(convertToAbsolute = tru
  */
 Webpage.prototype.getAbsoluteLinks = function getAbsoluteLinks(sameOrigin = false, extension = '*') {
     let links = this.content.match(regex.absoluteLinksRegex)
-
+    if(links == null) links = []
     if (sameOrigin) {
         let t_links = []
             // Take origin from url

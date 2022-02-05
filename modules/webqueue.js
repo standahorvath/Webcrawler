@@ -26,6 +26,17 @@ Webqueue.prototype.hasItemsToLoad = function hasItemsToLoad() {
         return false
 };
 
+Webqueue.prototype.clearCache = function clearCache() {
+        // Foreach all of queue WebPages
+        for (let i = 0; i < this.queue.length; i++) {
+            // If is webpage valid and not loaded
+            if (this.queue[i].loaded && this.queue[i].isValid()) {
+                this.queue[i].content = ""
+            }
+        }
+        return false
+};
+
 /**
  * Methods that download all of source in queue; can discover new links and download them too, this can be controlled by params
  * @param {function} callback Functions what is called after all is downloaded
@@ -35,9 +46,10 @@ Webqueue.prototype.hasItemsToLoad = function hasItemsToLoad() {
  */
 Webqueue.prototype.loadAll = function loadAll(callback = null, followNewLinks = false, sameOrigin = true, threads = 3) {
     // Create all of threads
-    for (let t = 0; t < threads; t++) {
-        this.usedThreads++
-            this.createThread(callback, followNewLinks, sameOrigin, t, true)
+    this.usedThreads = 0
+    while (this.usedThreads < threads) {
+            this.createThread(callback, followNewLinks, sameOrigin, this.usedThreads, true)
+            this.usedThreads++
     }
 };
 
@@ -55,7 +67,7 @@ Webqueue.prototype.createThread = function createThread(callback = null, followN
         // If is webpage valid and not loaded
         if (!this.queue[i].loaded && !this.queue[i].loading && this.queue[i].isValid()) {
             // then download it
-            if (debug) console.log("\x1b[32m[Thread " + threadID + "][Request] \x1b[37m" + this.queue[i].url)
+            if (debug) console.log("\x1b[32m[Thread " + threadID + "/" + this.usedThreads + "][Request] \x1b[37m" + this.queue[i].url)
             this.queue[i].load((content, webpage) => {
                 // Success
                 let localLinks = []
@@ -68,10 +80,10 @@ Webqueue.prototype.createThread = function createThread(callback = null, followN
                     this.enqueue(localLinks)
                     this.enqueue(absoluteLinks)
                 }
-                if (debug) console.log("\x1b[32m[Thread " + threadID + "][Downloaded] \x1b[37m" + webpage.url + "\x1b[33m found " + (localLinks.length + absoluteLinks.length) + " links")
+                if (debug) console.log("\x1b[32m[Thread " + threadID + "/" + this.usedThreads + "][Downloaded] \x1b[37m" + webpage.url + "\x1b[33m found " + (localLinks.length + absoluteLinks.length) + " links")
                 this.createThread(callback, followNewLinks, sameOrigin, threadID, debug)
             }, (reason, webpage) => { // TODO FAILED
-                if (debug) console.log("\x1b[31m[Thread " + threadID + "][Failed] \x1b[37m" + webpage.url)
+                if (debug) console.log("\x1b[31m[Thread " + threadID + "/" + this.usedThreads + "][Failed] \x1b[37m" + webpage.url)
                 console.log(reason)
                 this.createThread(callback, followNewLinks, sameOrigin, threadID, debug)
             })
