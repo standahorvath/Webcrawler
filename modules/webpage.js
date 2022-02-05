@@ -99,7 +99,7 @@ Webpage.prototype.load = function load(callback, failed = null) {
 Webpage.prototype.getLocalLinks = function getLocalLinks(convertToAbsolute = true, extension = '*') {
     // Take links from sourcecode
     let links = this.content.match(regex.localLinksRegex)
-
+    if(links == null) links = []
 
     let replace = ["\"", "'", "src=", "href="]
     for (let i = 0; i < links.length; i++) {

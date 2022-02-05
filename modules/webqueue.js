@@ -15,6 +15,17 @@ Webqueue.prototype.log = function log() {
     console.log(this.queue)
 };
 
+Webqueue.prototype.hasItemsToLoad = function hasItemsToLoad() {
+        // Foreach all of queue WebPages
+        for (let i = 0; i < this.queue.length; i++) {
+            // If is webpage valid and not loaded
+            if (!this.queue[i].loaded && !this.queue[i].loading && this.queue[i].isValid()) {
+                return true
+            }
+        }
+        return false
+};
+
 /**
  * Methods that download all of source in queue; can discover new links and download them too, this can be controlled by params
  * @param {function} callback Functions what is called after all is downloaded

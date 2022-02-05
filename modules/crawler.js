@@ -13,19 +13,68 @@ module.exports = {
         let assetsWebqueue = new Webqueue() // queue for assets (css, js, jpg, jpeg, svg)
         let webpage = new Webpage(url) // root page
 
-        webqueue.enqueue(url)
 
         webpage.load((content) => {
-            console.log(content)
 
             let localLinks = webpage.getLocalLinks(true, null)
             let absoluteLinks = webpage.getAbsoluteLinks(true, null)
+            let assetLinks = []
             webqueue.enqueue(localLinks)
             webqueue.enqueue(absoluteLinks)
-
-            let assetLinks = webpage.getAssets(true, options.extensions)
+            assetLinks = webpage.getAssets(false, options.extensions)
             assetsWebqueue.enqueue(assetLinks, "asset")
 
+
+            while(webqueue.hasItemsToLoad()){
+
+            /* Load links */
+            for (let i = 0; i < webqueue.queue.length; i++) {
+
+                if (!webqueue.queue[i].isValid()) continue
+
+                assetLinks = webqueue.queue[i].getAssets(false, options.extensions)
+                assetsWebqueue.enqueue(assetLinks, "asset")
+
+            }
+            
+            for (let i = 0; i < assetsWebqueue.queue.length; i++) {
+
+                if (!assetsWebqueue.queue[i].isValid()) continue
+
+                let dir = options.folder
+                    // If directory doesnt ends with / then adds it
+                if (!dir.endsWith("/")) dir += "/"
+
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir, { recursive: true });
+                }
+
+                assetsWebqueue.queue[i].setDownloadFolder(dir)
+            }
+
+            // Load all assets
+            assetsWebqueue.loadAll(() => {
+                
+            }, false, false, 16)
+
+            /* Load links end */
+
+            webqueue.loadAll(() => {
+                for (let i = 0; i < webqueue.queue.length; i++) {
+
+                    if (!webqueue.queue[i].isValid()) continue
+
+                    assetLinks = webqueue.queue[i].getAssets(false, options.extensions)
+                    assetsWebqueue.enqueue(assetLinks, "asset")
+
+                }
+            })
+
+            }
+
+            
+
+            /*
             // Download all source codes
             webqueue.loadAll(() => {
                 for (let i = 0; i < webqueue.queue.length; i++) {
@@ -64,6 +113,7 @@ module.exports = {
 
 
             }, true, true, 16)
+            */
 
         })
 

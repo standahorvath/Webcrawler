@@ -81,6 +81,7 @@ Webasset.prototype.load = function load(callback, failed = null) {
             res.pipe(writeStream);
             writeStream.on("finish", () => {
                 writeStream.close()
+                this.loaded = true
                 callback(null, this)
             });
         });
@@ -90,6 +91,7 @@ Webasset.prototype.load = function load(callback, failed = null) {
             res.pipe(writeStream);
             writeStream.on("finish", () => {
                 writeStream.close()
+                this.loaded = true
                 callback(null, this)
             });
         });
