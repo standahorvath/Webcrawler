@@ -76,31 +76,38 @@ Webasset.prototype.load = function load(callback, failed = null) {
 
     try {
 
-    if (this.url.startsWith("https")) {
-        const request = https.get(this.url, (res) => {
-            const writeStream = fs.createWriteStream(this.downloadFolder + this.getFilename());
-            res.pipe(writeStream);
-            writeStream.on("finish", () => {
-                writeStream.close()
-                this.loaded = true
-                callback(null, this)
+        if (this.url.startsWith("https")) {
+            const request = https.get(this.url, (res) => {
+                const writeStream = fs.createWriteStream(this.downloadFolder + this.getFilename());
+                res.pipe(writeStream);
+                writeStream.on("finish", () => {
+                    writeStream.close()
+                    this.loaded = true
+                    callback(null, this)
+                });
             });
-        });
-    } else {
-        const request = http.get(this.url, (res) => {
-            const writeStream = fs.createWriteStream(this.downloadFolder + this.getFilename());
-            res.pipe(writeStream);
-            writeStream.on("finish", () => {
-                writeStream.close()
-                this.loaded = true
-                callback(null, this)
-            });
-        });
-    }
 
-    }
-    catch(exception){
-        if(failed !== null) failed(exeption, this)
+            request.on("error", () => {
+                if (failed !== null) failed("error", this)
+            });
+        } else {
+            const request = http.get(this.url, (res) => {
+                const writeStream = fs.createWriteStream(this.downloadFolder + this.getFilename());
+                res.pipe(writeStream);
+                writeStream.on("finish", () => {
+                    writeStream.close()
+                    this.loaded = true
+                    callback(null, this)
+                });
+            });
+
+            request.on("error", () => {
+                if (failed !== null) failed("error", this)
+            });
+        }
+
+    } catch (exception) {
+        if (failed !== null) failed(exeption, this)
     }
 
     /*

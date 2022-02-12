@@ -2,12 +2,12 @@ const Webqueue = require('./webqueue.js')
 const Webpage = require('./webpage.js')
 
 module.exports = {
-    run: function (url, purpose, options, callback) {
+    run: function(url, purpose, options, callback) {
         if (typeof this[purpose] == "function") {
             this[purpose](url, options, callback)
         }
     },
-    downloadassets: async function (url, options, callback = null) {
+    downloadassets: async function(url, options, callback = null) {
 
         let webqueue = new Webqueue() // queue for source (html)
         let assetsWebqueue = new Webqueue() // queue for assets (css, js, jpg, jpeg, svg)
@@ -30,37 +30,38 @@ module.exports = {
 
                     /* Load links */
                     for (let i = 0; i < webqueue.queue.length; i++) {
-    
+
                         if (!webqueue.queue[i].isValid()) continue
-    
+
                         assetLinks = webqueue.queue[i].getAssets(false, options.extensions)
                         assetsWebqueue.enqueue(assetLinks, "asset")
 
-                       console.log("\x1b[32m[Getting assets links " + i + "/" + webqueue.queue.length + "] \x1b[37m Total:" + assetsWebqueue.queue.length)
-    
+                        console.log("\x1b[32m[Getting assets links " + i + "/" + webqueue.queue.length + "] \x1b[37m Total:" + assetsWebqueue.queue.length)
+
                     }
 
                     let tmpLinks = []
                     for (let i = 0; i < webqueue.queue.length; i++) {
+                        if (!webqueue.queue[i].isValid()) continue
                         let localLinks = webqueue.queue[i].getLocalLinks(true, null)
                         let absoluteLinks = webqueue.queue[i].getAbsoluteLinks(true, null)
                         tmpLinks = localLinks.concat(absoluteLinks)
                     }
                     webqueue.enqueue(tmpLinks)
-                    
-    
+
+
                     for (let i = 0; i < assetsWebqueue.queue.length; i++) {
-    
+
                         if (!assetsWebqueue.queue[i].isValid()) continue
-    
+
                         let dir = options.folder
-                        // If directory doesnt ends with / then adds it
+                            // If directory doesnt ends with / then adds it
                         if (!dir.endsWith("/")) dir += "/"
-    
+
                         if (!fs.existsSync(dir)) {
                             fs.mkdirSync(dir, { recursive: true });
                         }
-    
+
                         assetsWebqueue.queue[i].setDownloadFolder(dir)
                     }
 
@@ -96,7 +97,7 @@ module.exports = {
         })
 
     },
-    downloadsite: async function (url, options, callback = null) {
+    downloadsite: async function(url, options, callback = null) {
 
         let webqueue = new Webqueue() // queue for source (html)
         let assetsWebqueue = new Webqueue() // queue for assets (css, js, jpg, jpeg, svg)
@@ -121,7 +122,7 @@ module.exports = {
                     if (!webqueue.queue[i].isValid()) continue
 
                     let dir = options.folder
-                    // If directory doesnt ends with / then adds it
+                        // If directory doesnt ends with / then adds it
                     if (!dir.endsWith("/")) dir += "/"
 
                     // Make folder path from url path
@@ -139,7 +140,7 @@ module.exports = {
                     }
 
                     // Save into folder as html
-                    fs.writeFile(dir + "index.html", webqueue.queue[i].getRelativeContent(), 'utf8', function (err) {
+                    fs.writeFile(dir + "index.html", webqueue.queue[i].getRelativeContent(), 'utf8', function(err) {
                         if (err) return console.log(err);
                     })
 
@@ -155,7 +156,7 @@ module.exports = {
                     if (!assetsWebqueue.queue[i].isValid()) continue
 
                     let dir = options.folder
-                    // If directory doesnt ends with / then adds it
+                        // If directory doesnt ends with / then adds it
                     if (!dir.endsWith("/")) dir += "/"
 
                     // Make folder path from url path
@@ -193,7 +194,7 @@ module.exports = {
             callback()
         }
     },
-    sitemap: async function (url, options, callback = null) {
+    sitemap: async function(url, options, callback = null) {
         let webqueue = new Webqueue()
         let webpage = new Webpage(url)
         webqueue.enqueue(url)

@@ -16,25 +16,25 @@ Webqueue.prototype.log = function log() {
 };
 
 Webqueue.prototype.hasItemsToLoad = function hasItemsToLoad() {
-        // Foreach all of queue WebPages
-        for (let i = 0; i < this.queue.length; i++) {
-            // If is webpage valid and not loaded
-            if (!this.queue[i].loaded && !this.queue[i].loading && this.queue[i].isValid()) {
-                return true
-            }
+    // Foreach all of queue WebPages
+    for (let i = 0; i < this.queue.length; i++) {
+        // If is webpage valid and not loaded
+        if (!this.queue[i].loaded && !this.queue[i].loading && this.queue[i].isValid()) {
+            return true
         }
-        return false
+    }
+    return false
 };
 
 Webqueue.prototype.clearCache = function clearCache() {
-        // Foreach all of queue WebPages
-        for (let i = 0; i < this.queue.length; i++) {
-            // If is webpage valid and not loaded
-            if (this.queue[i].loaded && this.queue[i].isValid()) {
-                this.queue[i].content = ""
-            }
+    // Foreach all of queue WebPages
+    for (let i = 0; i < this.queue.length; i++) {
+        // If is webpage valid and not loaded
+        if (this.queue[i].loaded && this.queue[i].isValid()) {
+            this.queue[i].content = ""
         }
-        return false
+    }
+    return false
 };
 
 /**
@@ -48,8 +48,8 @@ Webqueue.prototype.loadAll = function loadAll(callback = null, followNewLinks = 
     // Create all of threads
     this.usedThreads = 0
     while (this.usedThreads < threads) {
-            this.createThread(callback, followNewLinks, sameOrigin, this.usedThreads, true)
-            this.usedThreads++
+        this.createThread(callback, followNewLinks, sameOrigin, this.usedThreads, true)
+        this.usedThreads++
     }
 };
 
@@ -92,7 +92,7 @@ Webqueue.prototype.createThread = function createThread(callback = null, followN
     }
 
     this.usedThreads--
-        if (debug) console.log("\x1b[32m[Threads] \x1b[37m" + this.usedThreads)
+        if (false) console.log("\x1b[32m[Threads] \x1b[37m" + this.usedThreads)
     if (this.usedThreads == 0) {
         callback()
     }
