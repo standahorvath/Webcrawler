@@ -25,8 +25,13 @@ crawler.run(startingUrl, "downloadsite", { folder: "./download/" }, () => {
 */
 
 
-let startingUrl = "https://ceskamincovna.cz/"
+let startingUrl = "https://pc.bazos.cz/"
 
-crawler.run(startingUrl, "downloadassets", { folder: "./download/", extensions: ['jpg', 'jpeg', 'png', 'gif'] }, () => {
+crawler.run(startingUrl, "downloadassets", { folder: "./download/", extensions: ['jpg', 'jpeg', 'png', 'gif'] }, ({ links, assets }) => {
+
+    fs.writeFile('./download/sitemap.xml', links.toSitemap(), 'utf8', function(err) {
+        if (err) return console.log(err);
+    })
+
     console.log("Finish")
 })

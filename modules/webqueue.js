@@ -47,8 +47,8 @@ Webqueue.prototype.clearCache = function clearCache() {
 Webqueue.prototype.loadAll = function loadAll(callback = null, followNewLinks = false, sameOrigin = true, threads = 3) {
     // Create all of threads
     this.usedThreads = 0
-    while (this.usedThreads < threads) {
-        this.createThread(callback, followNewLinks, sameOrigin, this.usedThreads, true)
+    for (let i = 0; i < threads; i++) {
+        this.createThread(callback, followNewLinks, sameOrigin, i, true)
         this.usedThreads++
     }
 };

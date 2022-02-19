@@ -11,6 +11,8 @@ function Webpage(url) {
     this.loaded = false;
     this.loading = false;
     this.valid = true;
+    this.used = false;
+    if (typeof this.url == "number") this.valid = false
 };
 
 Webpage.prototype.getFolderPath = function getFolderPath() {
@@ -99,7 +101,7 @@ Webpage.prototype.load = function load(callback, failed = null) {
 Webpage.prototype.getLocalLinks = function getLocalLinks(convertToAbsolute = true, extension = '*') {
     // Take links from sourcecode
     let links = this.content.match(regex.localLinksRegex)
-    if(links == null) links = []
+    if (links == null) links = []
 
     let replace = ["\"", "'", "src=", "href="]
     for (let i = 0; i < links.length; i++) {
@@ -207,7 +209,7 @@ Webpage.prototype.getLocalLinks = function getLocalLinks(convertToAbsolute = tru
  */
 Webpage.prototype.getAbsoluteLinks = function getAbsoluteLinks(sameOrigin = false, extension = '*') {
     let links = this.content.match(regex.absoluteLinksRegex)
-    if(links == null) links = []
+    if (links == null) links = []
     if (sameOrigin) {
         let t_links = []
             // Take origin from url

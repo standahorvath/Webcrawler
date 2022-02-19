@@ -24,14 +24,15 @@ module.exports = {
             assetLinks = startpage.getAssets(false, options.extensions)
             assetsWebqueue.enqueue(assetLinks, "asset")
 
+
             let runDownload = () => {
-                // Load all assets
+
                 webqueue.loadAll(() => {
 
                     /* Load links */
                     for (let i = 0; i < webqueue.queue.length; i++) {
 
-                        if (!webqueue.queue[i].isValid()) continue
+                        if (!webqueue.queue[i].isValid() || !webqueue.queue[i].loaded || webqueue.queue[i].used) continue
 
                         assetLinks = webqueue.queue[i].getAssets(false, options.extensions)
                         assetsWebqueue.enqueue(assetLinks, "asset")
@@ -42,17 +43,19 @@ module.exports = {
 
                     let tmpLinks = []
                     for (let i = 0; i < webqueue.queue.length; i++) {
-                        if (!webqueue.queue[i].isValid()) continue
+                        if (!webqueue.queue[i].isValid() || !webqueue.queue[i].loaded || webqueue.queue[i].used) continue
                         let localLinks = webqueue.queue[i].getLocalLinks(true, null)
                         let absoluteLinks = webqueue.queue[i].getAbsoluteLinks(true, null)
-                        tmpLinks = localLinks.concat(absoluteLinks)
+                        tmpLinks = tmpLinks.concat(localLinks.concat(absoluteLinks))
+
+                        webqueue.queue[i].used = true
                     }
                     webqueue.enqueue(tmpLinks)
 
 
                     for (let i = 0; i < assetsWebqueue.queue.length; i++) {
 
-                        if (!assetsWebqueue.queue[i].isValid()) continue
+                        if (!assetsWebqueue.queue[i].isValid() || assetsWebqueue.queue[i].used) continue
 
                         let dir = options.folder
                             // If directory doesnt ends with / then adds it
@@ -63,27 +66,45 @@ module.exports = {
                         }
 
                         assetsWebqueue.queue[i].setDownloadFolder(dir)
+
+                        assetsWebqueue.queue[i].used = true
                     }
 
-                    assetsWebqueue.loadAll(() => {
-                        for (let i = 0; i < webqueue.queue.length; i++) {
+                    console.log("webasets loading")
+                    if (assetsWebqueue.hasItemsToLoad()) {
+                        assetsWebqueue.loadAll(() => {
+                            console.log("webasets loaded")
+                                /*
+                                for (let i = 0; i < webqueue.queue.length; i++) {
 
-                            if (!webqueue.queue[i].isValid()) continue
+                                    if (!webqueue.queue[i].isValid()) continue
 
-                            assetLinks = webqueue.queue[i].getAssets(false, options.extensions)
-                            assetsWebqueue.enqueue(assetLinks, "asset")
+                                    //assetLinks = webqueue.queue[i].getAssets(false, options.extensions)
+                                    //assetsWebqueue.enqueue(assetLinks, "asset")
 
-                            webqueue.clearCache()
+                                    //webqueue.clearCache()
+
+
+                                }
+                                */
+
 
                             if (webqueue.hasItemsToLoad()) runDownload()
                             else {
+                                console.log("callback call")
                                 if (callback !== null && typeof callback == "function") {
-                                    callback()
+                                    callback({ links: webqueue, assets: assetsWebqueue })
                                 }
                             }
 
+
+                        }, false, true, 16)
+                    } else {
+                        console.log("callback call")
+                        if (callback !== null && typeof callback == "function") {
+                            callback({ links: webqueue, assets: assetsWebqueue })
                         }
-                    }, false, true, 16)
+                    }
 
                 }, false, true, 16)
 

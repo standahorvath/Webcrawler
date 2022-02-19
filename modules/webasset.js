@@ -15,6 +15,7 @@ function Webasset(url) {
     this.loading = false;
     this.valid = true;
     this.downloadFolder = "./download"
+    this.used = false;
 };
 
 Webasset.prototype.getFolderPath = function getFolderPath() {
