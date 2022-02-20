@@ -25,7 +25,7 @@ crawler.run(startingUrl, "downloadsite", { folder: "./download/" }, () => {
 */
 
 
-let startingUrl = "https://pc.bazos.cz/"
+let startingUrl = "https://www.ceskamincovna.cz/"
 
 crawler.run(startingUrl, "downloadassets", { folder: "./download/", extensions: ['jpg', 'jpeg', 'png', 'gif'] }, ({ links, assets }) => {
 
