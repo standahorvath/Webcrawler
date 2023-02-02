@@ -3,6 +3,7 @@ const http = require('http');
 const https = require('https');
 const regex = require('./regex.js')
 const fs = require("fs");
+const { randomBytes } = require('crypto');
 
 function Webasset(url) {
 
@@ -79,7 +80,7 @@ Webasset.prototype.load = function load(callback, failed = null) {
 
         if (this.url.startsWith("https")) {
             const request = https.get(this.url, (res) => {
-                const writeStream = fs.createWriteStream(this.downloadFolder + this.getFilename());
+                const writeStream = fs.createWriteStream(this.downloadFolder + Math.round((Math.random()*10000)) + "-" + this.getFilename());
                 res.pipe(writeStream);
                 writeStream.on("finish", () => {
                     writeStream.close()
@@ -93,7 +94,7 @@ Webasset.prototype.load = function load(callback, failed = null) {
             });
         } else {
             const request = http.get(this.url, (res) => {
-                const writeStream = fs.createWriteStream(this.downloadFolder + this.getFilename());
+                const writeStream = fs.createWriteStream(this.downloadFolder + Math.round((Math.random()*10000)) + "-" + this.getFilename());
                 res.pipe(writeStream);
                 writeStream.on("finish", () => {
                     writeStream.close()

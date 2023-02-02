@@ -4,7 +4,6 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "mocha",
         "start": "nodemon index.js"
     },
     "author": "",
@@ -12,8 +11,5 @@
     "dependencies": {
         "nodemon": "^2.0.15",
         "url-content": "^1.0.6"
-    },
-    "devDependencies": {
-        "mocha": "^9.2.0"
     }
 }

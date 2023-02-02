@@ -76,7 +76,7 @@ Webqueue.prototype.createThread = function createThread(callback = null, followN
                 if (followNewLinks) {
                     // if keep in same origin
                     localLinks = webpage.getLocalLinks(true, null)
-                    absoluteLinks = webpage.getAbsoluteLinks(sameOrigin, null)
+                    absoluteLinks = webpage.getAbsoluteLinks(sameOrigin, "*")
                     this.enqueue(localLinks)
                     this.enqueue(absoluteLinks)
                 }

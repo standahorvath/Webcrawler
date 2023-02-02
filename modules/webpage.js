@@ -100,6 +100,7 @@ Webpage.prototype.load = function load(callback, failed = null) {
  */
 Webpage.prototype.getLocalLinks = function getLocalLinks(convertToAbsolute = true, extension = '*') {
     // Take links from sourcecode
+    if(!this.content) return []
     let links = this.content.match(regex.localLinksRegex)
     if (links == null) links = []
 
@@ -207,7 +208,8 @@ Webpage.prototype.getLocalLinks = function getLocalLinks(convertToAbsolute = tru
  * @param {String/Array} extension  String or array of extensions, allowed: *, .jpg, *.jpg, ['css', 'js'], null
  * @returns Return array of absolute links in source code
  */
-Webpage.prototype.getAbsoluteLinks = function getAbsoluteLinks(sameOrigin = false, extension = '*') {
+Webpage.prototype.getAbsoluteLinks = function getAbsoluteLinks(sameOrigin = false, extension = '*', limit = 100) {
+    if(!this.content) return []
     let links = this.content.match(regex.absoluteLinksRegex)
     if (links == null) links = []
     if (sameOrigin) {
@@ -218,14 +220,13 @@ Webpage.prototype.getAbsoluteLinks = function getAbsoluteLinks(sameOrigin = fals
         // Filter links by origin inside the link
         for (let i = 0; i < links.length; i++) {
             if (links[i].startsWith(this.getOrigin())) {
-                t_links.push(links[i])
+                t_links.push(links[i].replace('&quot', ''))
             }
         }
 
         // manifest results
         links = t_links
     }
-
 
 
     // Filter for some kind of extensions
@@ -271,7 +272,7 @@ Webpage.prototype.getAbsoluteLinks = function getAbsoluteLinks(sameOrigin = fals
     }
 
     // return only unique elements
-    return links.filter((value, index, self) => { return self.indexOf(value) === index });
+    return links.filter((value, index, self) => { return self.indexOf(value) === index && self.indexOf(value) < limit });
 };
 
 Webpage.prototype.getAssets = function(sameOrigin = false, extensions = ["css", "js", "jpg", "jpeg", "png", "svg"]) {

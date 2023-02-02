@@ -17,7 +17,7 @@ crawler.run(startingUrl, "sitemap", (sitemap) => {
 
 /* Downloading all site */
 /*
-let startingUrl = "https://www.luxor.cz"
+let startingUrl = "https://musescore.com/user/38235231/scores/2933781"
 
 crawler.run(startingUrl, "downloadsite", { folder: "./download/" }, () => {
     console.log("Finish")
@@ -25,13 +25,15 @@ crawler.run(startingUrl, "downloadsite", { folder: "./download/" }, () => {
 */
 
 
-let startingUrl = "https://www.ceskamincovna.cz/"
+let startingUrl = "https://musescore.com/sitemap_scores10.xml" 
 
-crawler.run(startingUrl, "downloadassets", { folder: "./download/", extensions: ['jpg', 'jpeg', 'png', 'gif'] }, ({ links, assets }) => {
-
+crawler.run(startingUrl, "downloadassets", { folder: "./download/", extensions: ['svg'] }, ({ links, assets }) => {
+    /*
     fs.writeFile('./download/sitemap.xml', links.toSitemap(), 'utf8', function(err) {
         if (err) return console.log(err);
     })
+    */
 
     console.log("Finish")
 })
+ 

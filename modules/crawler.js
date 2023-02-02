@@ -17,14 +17,14 @@ module.exports = {
         startpage.load((content) => {
 
             let localLinks = startpage.getLocalLinks(true, null)
-            let absoluteLinks = startpage.getAbsoluteLinks(true, null)
+            let absoluteLinks = startpage.getAbsoluteLinks(true, "*")
             let assetLinks = []
             webqueue.enqueue(localLinks)
             webqueue.enqueue(absoluteLinks)
             assetLinks = startpage.getAssets(false, options.extensions)
             assetsWebqueue.enqueue(assetLinks, "asset")
 
-
+            
             let runDownload = () => {
 
                 webqueue.loadAll(() => {
@@ -45,7 +45,7 @@ module.exports = {
                     for (let i = 0; i < webqueue.queue.length; i++) {
                         if (!webqueue.queue[i].isValid() || !webqueue.queue[i].loaded || webqueue.queue[i].used) continue
                         let localLinks = webqueue.queue[i].getLocalLinks(true, null)
-                        let absoluteLinks = webqueue.queue[i].getAbsoluteLinks(true, null)
+                        let absoluteLinks = webqueue.queue[i].getAbsoluteLinks(false, "*")
                         tmpLinks = tmpLinks.concat(localLinks.concat(absoluteLinks))
 
                         webqueue.queue[i].used = true
@@ -106,7 +106,7 @@ module.exports = {
                         }
                     }
 
-                }, false, true, 16)
+                }, true, true, 16)
 
                 /* Load links end */
 
