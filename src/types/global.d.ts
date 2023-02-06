@@ -22,5 +22,9 @@ declare global {
         assetFolder?: string,
     }
 
+    interface Crawler {
+        run(): Promise<void>
+    }
+
 }
 export {}
