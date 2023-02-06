@@ -12,5 +12,15 @@ declare global {
         [key: string]: string
     }
 
+    type CrawlerSettings = {
+        startUrl: string,
+        maxDepth?: number,
+        maxPages?: number,
+        maxAssets?: number,
+        followExternal?: boolean,
+        followInternal?: boolean,
+        assetFolder?: string,
+    }
+
 }
 export {}

@@ -8,8 +8,11 @@ export class Url {
     private _path: null|string                        // /path/to/file
     private _query: QueryValue[]                 // ?key=value&key2=value2
     private _hash: null|string                    // #hash
+    private _filename: null|string              // file.ext
 
     public isValid: boolean
+    public isPage: boolean
+    public isAsset: boolean
 
     constructor(url: string) {
         this._url = url
@@ -21,16 +24,26 @@ export class Url {
             this._origin = this._protocol && this._host ? this._protocol + this._host : null
             this._path = Url.extractPath(this._url)
             this._query = Url.extractQuery(this._url) || []
-            this._hash = Url.extractHash(this._url) || ''
+            this._hash = Url.extractHash(this._url)
+            this._filename = Url.extractFilename(this._url)
+            this.isPage = Url.isPage(this._url)
+            this.isAsset = Url.isAsset(this._url)
         } else {
             this._protocol = null
             this._host = null
             this._origin = null
             this._path = null
             this._query = []
-            this._hash = ''
+            this._hash = null
+            this._filename = null
+            this.isPage = false
+            this.isAsset = false
         }
 
+    }
+
+    public toString(): string {
+        return this._url
     }
 
     public getFullUrl(): string {
@@ -78,6 +91,13 @@ export class Url {
     public getHash(): string|null {
         return this._hash
     }
+    /**
+     * Method returns filename of url for example: file.ext
+     * @returns {string|null} Returns filename of url
+     */
+    public getFilename(): string|null {
+        return this._filename
+    }
 
     // Method returns hash of url
     public static extractHash(url:string): string|null {
@@ -103,9 +123,31 @@ export class Url {
                 const queryItemArray = queryItem.split('=')
                 const queryItemObject: QueryValue = {}
                 queryItemObject[queryItemArray[0]] = queryItemArray[1] ? queryItemArray[1] : ''
+                if(queryItemArray[1] && queryItemArray[1].includes('#')) {
+                    queryItemObject[queryItemArray[0]] = queryItemArray[1].split('#')[0]
+                }
                 queryObjectArray.push(queryItemObject)
             })
             return queryObjectArray
+        }
+        return null
+    }
+
+    // Method returns filename of url
+    public static extractFilename(url:string): string|null {
+        if(url.includes('/')) {
+
+            url = url.split('?')[0]
+            url = url.split('#')[0]
+            
+            const pieces = url.split('/')
+            if(pieces.length > 1) {
+                let filename = pieces[pieces.length - 1]
+                if(filename.includes('.')) {
+                    return filename
+                }
+                return null
+            }
         }
         return null
     }
@@ -144,5 +186,15 @@ export class Url {
             return url.split('://')[0] + '://'
         }
         return null
+    }
+
+    // Method returns true if url is page
+    private static isPage(url: string): boolean {
+        return Url.extractFilename(url) === null
+    }
+
+    // Method returns true if url is asset
+    private static isAsset(url: string): boolean {
+        return Url.extractFilename(url) !== null
     }
 }

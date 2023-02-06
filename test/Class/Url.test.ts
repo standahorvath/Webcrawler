@@ -26,4 +26,33 @@ describe('Url Class', () => {
             expect(url+":"+(new Url(url)).isValid).toBe(url+":"+false)
         })
     })
+
+    test('Test query string', () => {
+        const url = new Url('https://www.domain.com/blog?page=1&category=2')
+        expect(url.getQuery()).toEqual([{page: '1'}, {category: '2'}])
+
+        const url2 = new Url('https://www.domain.com/blog?page=1&category=2&category=3')
+        expect(url2.getQuery()).toEqual([{page: '1'}, {category: '2'}, {category: '3'}])
+    })
+
+    test('Test query string with hash', () => {
+        const url = new Url('https://www.domain.com/blog?page=1&category=2#hash')
+        expect(url.getQuery()).toEqual([{page: '1'}, {category: '2'}])
+        expect(url.getHash()).toBe('hash')
+    })
+
+    test('Test query string with hash and path', () => {
+        const url = new Url('https://www.domain.com/robots.txt?page=1&category=2#hash?action=1')
+        expect(url.getQuery()).toEqual([{page: '1'}, {category: '2'}])
+        expect(url.getHash()).toBe('hash')
+        expect(url.getFilename()).toBe('robots.txt')
+    })
+
+    test('Test query with PHP style', () => {
+        const url = new Url('https://www.domain.com/index.php?route=product/category&path=20_27')
+        expect(url.getQuery()).toEqual([{route: 'product/category'}, {path: '20_27'}])
+        expect(url.getHash()).toBe(null)
+        expect(url.getFilename()).toBe('index.php')
+    })
+
 })
