@@ -8,5 +8,9 @@ declare global {
         Debug = 'debug',
     }
 
+    type QueryValue = {
+        [key: string]: string
+    }
+
 }
 export {}
