@@ -4,7 +4,7 @@
         "type": "git",
         "url": "https://github.com/standahorvath/webcrawler.git"
     },
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A typescript webcrawler library for downloading and parsing webpages",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",
