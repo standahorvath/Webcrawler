@@ -9,4 +9,9 @@ export class BaseCrawler implements Crawler {
 	constructor(settings: CrawlerSettings) {
 		this._settings = settings
 	}
+
+	public run(): Promise<void> {
+		console.log('Running crawler')
+		return Promise.resolve()
+	}
 }

@@ -1,18 +1,30 @@
 {
-    "name": "webcrawler",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "name": "ts-webcrawler",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/standahorvath/webcrawler.git"
+    },
+    "version": "0.0.1",
+    "description": "A typescript webcrawler library for downloading and parsing webpages",
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "dev": "nodemon index.ts",
         "start": "node index.ts",
-        "test": "jest"
+        "test": "jest",
+        "build": "del-cli ./dist && del-cli ./build && npm run build:esm && npm run build:cjs",
+        "build:esm": "tsc",
+        "build:cjs": "tsc --module CommonJS --outDir dist/cjs"
     },
-    "author": "",
-    "license": "ISC",
+    "author": "Stanislav Horváth",
+    "license": "MIT",
     "dependencies": {
         "@types/jest": "^29.1.2",
         "cors": "^2.8.4",
+        "del-cli": "^5.0.0",
         "dotenv": "^16.0.1",
         "node-fetch": "^2.6.9",
         "nodemon": "^2.0.15",
