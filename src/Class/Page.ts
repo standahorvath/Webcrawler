@@ -15,6 +15,18 @@ export class Page {
         this.links = [] as Url[]
         this.files = [] as Url[]
     }
+    public getUrl(): string {
+        return this.url.toString()
+    }
+    public getData(): string | null {
+        return this.data
+    }
+    public getLinks(): Url[] {
+        return this.links
+    }
+    public getFiles(): Url[] {
+        return this.files
+    }
     /**
      *  Method loads page and returns promise with loaded page
      * @param param0  {onload: (page: Page) => void} Callback function that is called when page is loaded 

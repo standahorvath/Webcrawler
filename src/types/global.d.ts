@@ -1,4 +1,4 @@
-
+import { Page } from '../Class/Page'
 declare global {
 
     const enum LogLevel {
@@ -21,10 +21,10 @@ declare global {
         followInternal?: boolean,
         assetFolder?: string,
     }
-
+/*
     interface Crawler {
-        run(): Promise<void>
+        run({onPageLoaded = (page: Page) => void}): Promise<void>
     }
-
+*/
 }
 export {}

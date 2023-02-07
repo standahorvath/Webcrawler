@@ -12,7 +12,7 @@
         "dist"
     ],
     "scripts": {
-        "dev": "nodemon index.ts",
+        "dev": "nodemon src/dev.ts",
         "start": "node index.ts",
         "test": "jest",
         "build": "del-cli ./dist && del-cli ./build && npm run build:esm && npm run build:cjs",
