@@ -47,6 +47,14 @@ export class Page {
         return this
     }
 
+    public getInternalLinks(): Url[] {
+        return this.links.filter((url) => url.getHost() === this.url.getHost())
+    }
+
+    public getExternalLinks(): Url[] {
+        return this.links.filter((url) => url.getHost() !== this.url.getHost())
+    }
+
     /**
      *  Method returns array of Url objects
      * @returns {Url[]} Returns array of Url objects
