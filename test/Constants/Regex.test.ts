@@ -1,5 +1,5 @@
 import {describe, expect, test} from '@jest/globals'
-import {absoluteUrl, email, emailExact, relativeUrl} from '../../src/Constants/Regex'
+import {absoluteUrl, email, emailExact, relativeUrl, metaTag, titleTag} from '../../src/Constants/Regex'
 
 describe('Absolute url Regex', () => {
     test('absoluteUrl matches absolute url', () => {
@@ -64,5 +64,35 @@ describe('Relative url Regex', () => {
     })
     test('relativeUrl match case insenstitive', () => {
         expect(relativeUrl.test('<IMG srC="image.png">')).toBe(false) 
+    })
+})
+
+describe('Meta tag Regex', () => {
+    test('metaTag matches meta tag', () => {
+        expect(metaTag.test('<meta name="viewport" content="width=device-width, initial-scale=1">')).toBe(true)
+    })
+    test('metaTag does not match invalid tag', () => {
+        expect(metaTag.test('<met name="viewport" content="width=device-width, initial-scale=1">')).toBe(false)
+    })
+    test('metaTag match in middle of code', () => {
+        expect(metaTag.test('<script crossorigin="anonymous" defer="defer" type="application/javascript" src="parser.json"></script>')).toBe(false)
+    })
+    test('metaTag match case insenstitive', () => {
+        expect(metaTag.test('<META NAME="viewport" CONTENT="width=device-width, initial-scale=1">')).toBe(true)
+    })
+})
+
+describe('Title tag Regex', () => {
+    test('titleTag matches title tag', () => {
+        expect(titleTag.test('<title>GitHub</title>')).toBe(true)
+    })
+    test('titleTag does not match invalid tag', () => {
+        expect(titleTag.test('<titl>GitHub</title>')).toBe(false)
+    })
+    test('titleTag match in middle of code', () => {
+        expect(titleTag.test('<script crossorigin="anonymous" defer="defer" type="application/javascript" src="parser.json"></script>')).toBe(false)
+    })
+    test('titleTag match case insenstitive', () => {
+        expect(titleTag.test('<TITLE>GitHub</TITLE>')).toBe(true)
     })
 })

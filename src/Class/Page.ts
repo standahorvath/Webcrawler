@@ -1,6 +1,6 @@
 import { Url } from './Url'
 import fetch from 'node-fetch'
-import { absoluteUrl, relativeUrl } from '../Constants/Regex'
+import { absoluteUrl, relativeUrl, titleTag, metaTag } from '../Constants/Regex'
 export class Page {
     url: Url
     data: string | null
@@ -53,6 +53,39 @@ export class Page {
 
     public getExternalLinks(): Url[] {
         return this.links.filter((url) => url.getHost() !== this.url.getHost())
+    }
+
+    public getTitleTag(): string | null {
+        if(!this.loaded || this.data == null) return null
+        const match = this.data.match(titleTag)
+        if(match == null) return null
+        return match[0].replace(/<title>/, '').replace(/<\/title>/, '')
+    }
+
+    public getMetaTag(name: string): string | null {
+        const metaTags = this.getMetaTags()
+        const metaTag = metaTags.find((metaTag) => metaTag.name === name)
+        return metaTag == null ? null : metaTag.content
+    }
+
+    public getMetaTags(): MetaTag[] {
+        if(!this.loaded || this.data == null) return [] as MetaTag[]
+        const matches = this.data.matchAll(metaTag)
+        if(matches == null) return [] as MetaTag[]
+        const metaTags: MetaTag[] = []
+
+        for(const match of matches) {
+            const nameAtribute = match[0].match(/name=["'](.*?)["']/)
+            const nameAtributeValue = nameAtribute == null ? '' : nameAtribute[0].replace(/name="/, '').replace(/"/, '')
+            const contentAtribute = match[0].match(/content=["'](.*?)["']/)
+            const contentAtributeValue = contentAtribute == null ? '' : contentAtribute[0].replace(/content="/, '').replace(/"/, '')
+            metaTags.push({
+                name: nameAtributeValue,
+                content: contentAtributeValue
+            })
+        }
+
+        return metaTags
     }
 
     /**

@@ -50,6 +50,10 @@ declare global {
         asset: Asset,
         error: Error
     }
+    type MetaTag = {
+        name: string,
+        content: string
+    }
 
 /*
     interface Crawler {

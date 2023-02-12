@@ -127,6 +127,8 @@ export class BaseCrawler {
 			this._pagesToFollow.push(page)
 			// Decrement active threads
 			this._activeThreads--
+			if(this._settings.debug) Logger.log("Page loaded", page.getUrl().toString(), LogLevel.Info)
+			if(this._settings.debug) Logger.log("End Page thread", "Threads: " + this._activeThreads)
 			return Promise.resolve(page)
 		} catch (error) {
 			// Decrement active threads
@@ -155,6 +157,8 @@ export class BaseCrawler {
 			this._assetsCrawled.push(asset)
 			// Decrement active threads
 			this._activeThreads--
+			if(this._settings.debug) Logger.log("Asset loaded", asset.getUrl().toString(), LogLevel.Info)
+			if(this._settings.debug) Logger.log("End Asset thread", "Threads: " + this._activeThreads)
 			// Return asset
 			return Promise.resolve(asset)
 		} catch (error) {
