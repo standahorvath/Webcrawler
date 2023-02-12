@@ -1,6 +1,7 @@
 import { Page } from '../Class/Page'
 import { Asset } from '../Class/Asset'
 import { Url } from '../Class/Url'
+import { Logger } from '../Class/Logger'
 
 export class BaseCrawler {
 	private _settings: CrawlerSettings
@@ -105,37 +106,61 @@ export class BaseCrawler {
 	}
 
 	private async startPageThread(): Promise<void | Page> {
-		console.log("Starts new Page thread: " + this._activeThreads)
+		// Check if crawler can run
 		if (!this.canPageCrawl()) return Promise.resolve()
-		console.log("Can crawl page")
+
+		// Increment active threads
 		this._activeThreads++
+		// Get next page
 		const page = this._pages.shift()
+		// Debug start
+		if(this._settings.debug) Logger.log("Starts new Page thread", "Threads: " + this._activeThreads)
+		// Check if page exists
 		if (!page) return Promise.resolve()
+
 		try {
+			// Load page
 			await page.load()
+			// Add page to crawled pages
 			this._pagesCrawled.push(page)
+			// Add page to pages to follow
 			this._pagesToFollow.push(page)
+			// Decrement active threads
 			this._activeThreads--
 			return Promise.resolve(page)
 		} catch (error) {
+			// Decrement active threads
 			this._activeThreads--
 			return Promise.reject({ error, page } as ErrorPage)
 		}
 	}
 
 	private async startAssetThread(): Promise<void | Asset> {
-		console.log("Starts new Asset thread: " + this._activeThreads)
+		// Check if crawler can run	
 		if (!this.canAssetCrawl()) return Promise.resolve()
+
+		// Increment active threads
 		this._activeThreads++
+		// Get next asset
 		const asset = this._assets.shift()
+		// Debug message
+		if(this._settings.debug) Logger.log("Starts new Asset thread", "Threads: " + this._activeThreads)
+		// Check if asset exists
 		if (!asset) return Promise.resolve()
+
 		try {
+			// Load asset
 			await asset.load()
+			// Add asset to crawled assets
 			this._assetsCrawled.push(asset)
+			// Decrement active threads
 			this._activeThreads--
+			// Return asset
 			return Promise.resolve(asset)
 		} catch (error) {
+			// Decrement active threads
 			this._activeThreads--
+			// Return error
 			return Promise.reject({ error, asset } as ErrorAsset)
 		}
 	}
@@ -168,6 +193,9 @@ export class BaseCrawler {
 	 * @param url Url to enqueue
 	 */
 	public enquequePage(url: Url): void {
+		if(this._pagesCrawled.find((page) => page.getUrl().toString() === url.toString())) return
+		if(this._pages.find((page) => page.getUrl().toString() === url.toString())) return
+		if(this._pagesToFollow.find((page) => page.getUrl().toString() === url.toString())) return
 		this._pages.push(new Page(url))
 	}
 
@@ -176,6 +204,8 @@ export class BaseCrawler {
 	 * @param url Url to enqueue
 	 */
 	public enquequeAsset(url: Url): void {
+		if(this._assetsCrawled.find((asset) => asset.getUrl().toString() === url.toString())) return
+		if(this._assets.find((asset) => asset.getUrl().toString() === url.toString())) return
 		this._assets.push(new Asset(url))
 	}
 }

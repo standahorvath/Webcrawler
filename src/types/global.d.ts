@@ -24,6 +24,7 @@ declare global {
         followInternal?: boolean,
         assetFolder?: string,
         maxThreads?: number,
+        debug?: boolean,
     }
 
     type CrawlerHooks = {
