@@ -4,22 +4,23 @@
         "type": "git",
         "url": "https://github.com/standahorvath/webcrawler.git"
     },
-    "version": "0.0.2",
+    "version": "0.0.5",
     "description": "A typescript webcrawler library for downloading and parsing webpages",
-    "main": "dist/cjs/index.js",
-    "module": "dist/esm/index.js",
+    "main": "./lib/main.js",
+    "types": "./lib/main.d.ts",
     "files": [
-        "dist"
+        "lib"
     ],
     "scripts": {
         "dev": "nodemon src/dev.ts",
         "start": "node index.ts",
         "test": "jest",
-        "build": "del-cli ./dist && del-cli ./build && npm run build:esm && npm run build:cjs",
+        "build": "del-cli ./lib && del-cli ./build && npm run build:esm",
         "build:esm": "tsc",
-        "build:cjs": "tsc --module CommonJS --outDir dist/cjs"
+        "pre-publish": "npm run build && npm run test"
     },
     "author": "Stanislav Horváth",
+    "keywords": ["Web Crawler", "Spider", "Download page", "Scraper", "Webpage", "HTML", "Parse", "Typescript Webcrawler"],
     "license": "MIT",
     "dependencies": {
         "@types/jest": "^29.1.2",
