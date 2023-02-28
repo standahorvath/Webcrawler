@@ -4,10 +4,10 @@
         "type": "git",
         "url": "https://github.com/standahorvath/webcrawler.git"
     },
-    "version": "0.0.5",
+    "version": "0.0.7",
     "description": "A typescript webcrawler library for downloading and parsing webpages",
-    "main": "./lib/main.js",
-    "types": "./lib/main.d.ts",
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts",
     "files": [
         "lib"
     ],
