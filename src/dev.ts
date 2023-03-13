@@ -7,8 +7,8 @@ import { Logger } from './Class/Logger'
 const bootstrap = () => {
 	const crawler = new BaseCrawler( 
 		{ 
-			startUrl: 'https://www.kosik.cz/', 
-			maxPages: 10, 
+			startUrl: 'https://www.msb-jablonec.cz/', 
+			maxPages: 30, 
 			maxAssets: 50, 
 			maxDepth: 2, 
 			followExternal: false, 
