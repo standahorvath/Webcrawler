@@ -55,6 +55,13 @@ export class Page {
         return this.links.filter((url) => url.getHost() !== this.url.getHost())
     }
 
+    public getLang(): string | null {
+        if (!this.loaded || this.data == null) return null;
+        const match = this.data.match(/<html(?:\s+[^>]*?)?\s+lang=["']([\w-]+)["']/i);
+        if (match == null) return null;
+        return match[1];
+    }
+
     public getTitleTag(): string | null {
         if(!this.loaded || this.data == null) return null
         const match = this.data.match(titleTag)
@@ -110,8 +117,11 @@ export class Page {
      */
     private processAbsoluteLinks(): Array<Url> | null {
         if (this.data == null) return null
+        let clearedData = this.data.replace(/<head(?:\s+[^>]*?)?>[\s\S]*?<\/head>/gi, '');
+        clearedData = clearedData.replace(/<script(?:\s+[^>]*?)?(?:\s+type=(['"])(text\/javascript|application\/javascript)\1)?[\s\S]*?<\/script>/gi, '');
+        clearedData = clearedData.replace(/<style(?:\s+[^>]*?)?(?:\s+type=(['"])(text\/css)\1|\s+id=['"]\w+['"])?[\s\S]*?<\/style>/gi, '');
 
-        return [...this.data.matchAll(absoluteUrl)].map((match) => {
+        return [...clearedData.matchAll(absoluteUrl)].map((match) => {
             const url = new Url(match[0])
             return url
         })
@@ -123,8 +133,11 @@ export class Page {
      */
     private processRelativeLinks(): Array<Url> | null {
         if (this.data == null) return null
+        let clearedData = this.data.replace(/<head(?:\s+[^>]*?)?>[\s\S]*?<\/head>/gi, '');
+        clearedData = clearedData.replace(/<script(?:\s+[^>]*?)?(?:\s+type=(['"])(text\/javascript|application\/javascript)\1)?[\s\S]*?<\/script>/gi, '');
+        clearedData = clearedData.replace(/<style(?:\s+[^>]*?)?(?:\s+type=(['"])(text\/css)\1|\s+id=['"]\w+['"])?[\s\S]*?<\/style>/gi, '');
 
-        return [...this.data.matchAll(relativeUrl)].map((match) => {
+        return [...clearedData.matchAll(relativeUrl)].map((match) => {
             const path = match[1].startsWith('/') ? match[1] : this.url.getPath() + '/' + match[1]
             const url = new Url(this.url.getOrigin() + path)
             return url
