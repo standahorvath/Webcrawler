@@ -65,6 +65,11 @@ describe('Relative url Regex', () => {
     test('relativeUrl match case insenstitive', () => {
         expect(relativeUrl.test('<IMG srC="image.png">')).toBe(false) 
     })
+    test('relativeUrl links html', () => {
+        expect(relativeUrl.test('<a href="index.html">Uvod</a>')).toBe(true) 
+    })
+    
+
 })
 
 describe('Meta tag Regex', () => {

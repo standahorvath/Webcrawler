@@ -197,9 +197,11 @@ export class BaseCrawler {
 	 * @param url Url to enqueue
 	 */
 	public enquequePage(url: Url): void {
-		if(this._pagesCrawled.find((page) => page.getUrl().toString() === url.toString())) return
-		if(this._pages.find((page) => page.getUrl().toString() === url.toString())) return
-		if(this._pagesToFollow.find((page) => page.getUrl().toString() === url.toString())) return
+		const urlWithoutHash = url.toString().split("#")[0]
+
+		if(this._pagesCrawled.find((page) => page.getUrl().toString() === urlWithoutHash)) return
+		if(this._pages.find((page) => page.getUrl().toString() === urlWithoutHash)) return
+		if(this._pagesToFollow.find((page) => page.getUrl().toString() === urlWithoutHash)) return
 		this._pages.push(new Page(url))
 	}
 
