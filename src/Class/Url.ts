@@ -5,7 +5,8 @@ export class Url {
     private _host: null|string               // domain.com
     private _protocol: null|string           // http:// or https://
     private _origin: null|string                      // http://domain.com or https://domain.com
-    private _path: null|string                        // /path/to/file
+    private _path: null|string                        // /path/to/file.php
+    private _folder: null|string                      // /path/to/
     private _query: QueryValue[]                 // ?key=value&key2=value2
     private _hash: null|string                    // #hash
     private _filename: null|string              // file.ext
@@ -23,6 +24,7 @@ export class Url {
             this._host = Url.extractHost(this._url)
             this._origin = this._protocol && this._host ? this._protocol + this._host : null
             this._path = Url.extractPath(this._url)
+            this._folder = Url.extractFolder(this._url)
             this._query = Url.extractQuery(this._url) || []
             this._hash = Url.extractHash(this._url)
             this._filename = Url.extractFilename(this._url)
@@ -33,6 +35,7 @@ export class Url {
             this._host = null
             this._origin = null
             this._path = null
+            this._folder = null
             this._query = []
             this._hash = null
             this._filename = null
@@ -71,11 +74,18 @@ export class Url {
         return this._origin
     }
     /**
-     *  Method returns path of url for example: /path/to/file
+     *  Method returns path of url for example: /path/to/file.php
      * @returns {string|null} Returns path of url
      */
     public getPath(): string|null {
         return this._path
+    }
+    /**
+     *  Method returns folder of url for example: /path/to/file
+     * @returns {string|null} Returns path of url
+     */
+    public getFolder(): string|null {
+        return this._folder
     }
     /**
      *  Method returns query of url as array of objects
@@ -97,6 +107,13 @@ export class Url {
      */
     public getFilename(): string|null {
         return this._filename
+    }
+    
+    /**
+     * Method returns comparable string of url without hash and query
+     */
+    public getComparable(): string {
+        return this._url.split('#')[0].split('?')[0]
     }
 
     // Method returns hash of url
@@ -160,6 +177,18 @@ export class Url {
             if(!pathNameMatches.length) return null
             const pathName = pathNameMatches.pop()
             return pathName ? pathName : null
+        }
+        return null
+    }
+
+    // Method returns folder of url
+    public static extractFolder(url:string): string|null {
+        const pathName = Url.extractPath(url)
+        if(pathName == null) return null
+        if(pathName.includes('/')) {
+            const pieces = pathName.split('/')
+            pieces.pop()
+            return pieces.join('/')
         }
         return null
     }

@@ -18,6 +18,9 @@ export class Page {
     public getUrl(): string {
         return this.url.toString()
     }
+    public getUrlObject(): Url {
+        return this.url
+    }
     public getData(): string | null {
         return this.data
     }
@@ -138,10 +141,12 @@ export class Page {
         clearedData = clearedData.replace(/<style(?:\s+[^>]*?)?(?:\s+type=(['"])(text\/css)\1|\s+id=['"]\w+['"])?[\s\S]*?<\/style>/gi, '');
 
         return [...clearedData.matchAll(relativeUrl)].map((match) => {
+            // match[1] is file path
+            // /path/to/file
             let file = match[1]
             if(!file.startsWith('/')) file = '/' + file
 
-            const path = this.url.getPath() + file
+            const path = this.url.getFolder() + file
             const url = new Url(this.url.getOrigin() + path.replace(/\/\//, '/'))
             return url
         })

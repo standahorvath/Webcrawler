@@ -55,4 +55,9 @@ describe('Url Class', () => {
         expect(url.getFilename()).toBe('index.php')
     })
 
+    test('Test get path', () => {
+        const url = new Url('https://www.domain.com/path/to/file.html')
+        expect(url.getPath()).toBe('/path/to/file.html')
+    })
+
 })

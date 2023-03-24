@@ -8,7 +8,7 @@ const bootstrap = () => {
 	const crawler = new BaseCrawler( 
 		{ 
 			startUrl: 'https://vetoelektro.cz/', 
-			maxPages: 30, 
+			maxPages: 10, 
 			maxAssets: 50, 
 			maxDepth: 2, 
 			followExternal: false, 
@@ -25,14 +25,12 @@ const bootstrap = () => {
 		},
 		onAllPagesLoaded: ({ crawler }) => {
 			console.log(`All pages loaded`)
-			console.log(crawler.getCrawledPages())
 		},
 		onAssetLoaded: ({ asset, crawler }) => {
 			console.log(`Asset loaded: ${asset.getUrl()}`)
 		},
 		onAllAssetsLoaded: ({ crawler }) => {
 			console.log(`All assets loaded`)
-			console.log(crawler.getCrawledAssets())
 		},
 		onPageError: (url: Page, error: Error) => {
 			console.log(`Error loading page: ${url}`)

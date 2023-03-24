@@ -44,12 +44,21 @@ export class BaseCrawler {
 		this.hooks = hooks
 
 		// Start crawling
+		if(this._settings.maxPages || 0 > 0){
 		this.crawlingPageRunner().then(() => {
 			if(this.hooks.onAllPagesLoaded) this.hooks.onAllPagesLoaded({ crawler: this })
 		})
-		this.crawlingAssetRunner().then(() => {
+		} else {
+			if(this.hooks.onAllPagesLoaded) this.hooks.onAllPagesLoaded({ crawler: this })
+		}
+
+		if(this._settings.maxAssets || 0 > 0){
+			this.crawlingAssetRunner().then(() => {
+				if(this.hooks.onAllAssetsLoaded) this.hooks.onAllAssetsLoaded({ crawler: this })
+			})
+		} else {
 			if(this.hooks.onAllAssetsLoaded) this.hooks.onAllAssetsLoaded({ crawler: this })
-		})
+		}
 
 		//onPageLoaded({ page: new Page(this._settings.startUrl), crawler: this })
 		//onAssetLoaded({ asset: new Asset(this._settings.startUrl), crawler: this })
@@ -113,16 +122,16 @@ export class BaseCrawler {
 		this._activeThreads++
 		// Get next page
 		const page = this._pages.shift()
-		// Debug start
-		if(this._settings.debug) Logger.log("Starts new Page thread", "Threads: " + this._activeThreads)
 		// Check if page exists
 		if (!page) return Promise.resolve()
+		// Add page to crawled pages
+		this._pagesCrawled.push(page)
+		// Debug start
+		if(this._settings.debug) Logger.log("Starts new Page thread", "Threads: " + this._activeThreads)
 
 		try {
 			// Load page
 			await page.load()
-			// Add page to crawled pages
-			this._pagesCrawled.push(page)
 			// Add page to pages to follow
 			this._pagesToFollow.push(page)
 			// Decrement active threads
@@ -197,11 +206,10 @@ export class BaseCrawler {
 	 * @param url Url to enqueue
 	 */
 	public enquequePage(url: Url): void {
-		const urlWithoutHash = url.toString().split("#")[0]
-
-		if(this._pagesCrawled.find((page) => page.getUrl().toString() === urlWithoutHash)) return
-		if(this._pages.find((page) => page.getUrl().toString() === urlWithoutHash)) return
-		if(this._pagesToFollow.find((page) => page.getUrl().toString() === urlWithoutHash)) return
+		const comparable = url.getComparable()
+		if(this._pagesCrawled.find((page) => page.getUrlObject().getComparable() === comparable)) return
+		if(this._pages.find((page) => page.getUrlObject().getComparable() === comparable)) return
+		if(this._pagesToFollow.find((page) => page.getUrlObject().getComparable() === comparable)) return
 		this._pages.push(new Page(url))
 	}
 
