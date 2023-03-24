@@ -190,11 +190,22 @@ export class Url {
 
     // Method returns true if url is page
     private static isPage(url: string): boolean {
-        return Url.extractFilename(url) === null
+        if(Url.extractFilename(url) === null) {
+            return true
+        }
+        const ext = Url.extractFilename(url)?.split('.')[1] || ''
+        if(ext === 'html' || 
+           ext === 'htm' || 
+           ext === 'php' ||
+           ext === 'asp' ||
+           ext === 'aspx') {
+            return true
+        }
+        return false
     }
 
     // Method returns true if url is asset
     private static isAsset(url: string): boolean {
-        return Url.extractFilename(url) !== null
+        return !Url.isPage(url)
     }
 }

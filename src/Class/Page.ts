@@ -104,7 +104,7 @@ export class Page {
         const absoluteLinks = this.processAbsoluteLinks() || [] as Url[]
         const relativeLinks = this.processRelativeLinks() || [] as Url[]
         const allLinks = [...absoluteLinks, ...relativeLinks]
-
+        
         return {
             links: allLinks.filter((url) => url.isValid && url.isPage),
             files: allLinks.filter((url) => url.isValid && url.isAsset)
@@ -138,8 +138,11 @@ export class Page {
         clearedData = clearedData.replace(/<style(?:\s+[^>]*?)?(?:\s+type=(['"])(text\/css)\1|\s+id=['"]\w+['"])?[\s\S]*?<\/style>/gi, '');
 
         return [...clearedData.matchAll(relativeUrl)].map((match) => {
-            const path = match[1].startsWith('/') ? match[1] : this.url.getPath() + '/' + match[1]
-            const url = new Url(this.url.getOrigin() + path)
+            let file = match[1]
+            if(!file.startsWith('/')) file = '/' + file
+
+            const path = this.url.getPath() + file
+            const url = new Url(this.url.getOrigin() + path.replace(/\/\//, '/'))
             return url
         })
     }

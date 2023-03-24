@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1679613841685" clover="3.2.0">
-  <project timestamp="1679613841685" name="All files">
-    <metrics statements="152" coveredstatements="87" conditionals="92" coveredconditionals="33" methods="43" coveredmethods="21" elements="287" coveredelements="141" complexity="0" loc="152" ncloc="152" packages="3" files="4" classes="4"/>
+<coverage generated="1679616499597" clover="3.2.0">
+  <project timestamp="1679616499597" name="All files">
+    <metrics statements="159" coveredstatements="92" conditionals="103" coveredconditionals="43" methods="43" coveredmethods="21" elements="305" coveredelements="156" complexity="0" loc="159" ncloc="159" packages="3" files="4" classes="4"/>
     <package name="src.Class">
-      <metrics statements="142" coveredstatements="77" conditionals="92" coveredconditionals="33" methods="43" coveredmethods="21"/>
+      <metrics statements="149" coveredstatements="82" conditionals="103" coveredconditionals="43" methods="43" coveredmethods="21"/>
       <file name="Page.ts" path="C:\Users\Standa\Desktop\Work\Personal\WEBCRAWLER\src\Class\Page.ts">
-        <metrics statements="64" coveredstatements="7" conditionals="48" coveredconditionals="1" methods="23" coveredmethods="3"/>
+        <metrics statements="66" coveredstatements="7" conditionals="48" coveredconditionals="1" methods="23" coveredmethods="3"/>
         <line num="12" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="13" count="2" type="stmt"/>
         <line num="14" count="2" type="stmt"/>
@@ -67,12 +67,14 @@
         <line num="137" count="0" type="stmt"/>
         <line num="138" count="0" type="stmt"/>
         <line num="140" count="0" type="stmt"/>
-        <line num="141" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="142" count="0" type="stmt"/>
-        <line num="143" count="0" type="stmt"/>
+        <line num="141" count="0" type="stmt"/>
+        <line num="142" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="145" count="0" type="stmt"/>
+        <line num="146" count="0" type="stmt"/>
       </file>
       <file name="Url.ts" path="C:\Users\Standa\Desktop\Work\Personal\WEBCRAWLER\src\Class\Url.ts">
-        <metrics statements="78" coveredstatements="70" conditionals="44" coveredconditionals="32" methods="20" coveredmethods="18"/>
+        <metrics statements="83" coveredstatements="75" conditionals="55" coveredconditionals="42" methods="20" coveredmethods="18"/>
         <line num="18" count="70" type="stmt"/>
         <line num="19" count="70" type="stmt"/>
         <line num="21" count="70" type="cond" truecount="2" falsecount="0"/>
@@ -123,14 +125,14 @@
         <line num="129" count="29" type="stmt"/>
         <line num="131" count="17" type="stmt"/>
         <line num="133" count="31" type="stmt"/>
-        <line num="138" count="144" type="cond" truecount="1" falsecount="1"/>
-        <line num="140" count="144" type="stmt"/>
-        <line num="141" count="144" type="stmt"/>
-        <line num="143" count="144" type="stmt"/>
-        <line num="144" count="144" type="cond" truecount="1" falsecount="1"/>
-        <line num="145" count="144" type="stmt"/>
-        <line num="146" count="144" type="cond" truecount="2" falsecount="0"/>
-        <line num="147" count="48" type="stmt"/>
+        <line num="138" count="176" type="cond" truecount="1" falsecount="1"/>
+        <line num="140" count="176" type="stmt"/>
+        <line num="141" count="176" type="stmt"/>
+        <line num="143" count="176" type="stmt"/>
+        <line num="144" count="176" type="cond" truecount="1" falsecount="1"/>
+        <line num="145" count="176" type="stmt"/>
+        <line num="146" count="176" type="cond" truecount="2" falsecount="0"/>
+        <line num="147" count="80" type="stmt"/>
         <line num="149" count="96" type="stmt"/>
         <line num="152" count="0" type="stmt"/>
         <line num="157" count="48" type="cond" truecount="3" falsecount="1"/>
@@ -149,8 +151,13 @@
         <line num="185" count="48" type="cond" truecount="1" falsecount="1"/>
         <line num="186" count="48" type="stmt"/>
         <line num="188" count="0" type="stmt"/>
-        <line num="193" count="48" type="stmt"/>
-        <line num="198" count="48" type="stmt"/>
+        <line num="193" count="96" type="cond" truecount="2" falsecount="0"/>
+        <line num="194" count="64" type="stmt"/>
+        <line num="196" count="32" type="cond" truecount="1" falsecount="1"/>
+        <line num="197" count="32" type="cond" truecount="7" falsecount="0"/>
+        <line num="202" count="4" type="stmt"/>
+        <line num="204" count="28" type="stmt"/>
+        <line num="209" count="48" type="stmt"/>
       </file>
     </package>
     <package name="src.Constants">
