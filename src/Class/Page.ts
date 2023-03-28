@@ -69,7 +69,7 @@ export class Page {
         if(!this.loaded || this.data == null) return null
         const match = this.data.match(titleTag)
         if(match == null) return null
-        return match[0].replace(/<title>/, '').replace(/<\/title>/, '')
+        return match[0].replace(/<[^>]*>/g, '')
     }
 
     public getMetaTag(name: string): string | null {
@@ -146,7 +146,7 @@ export class Page {
             let file = match[1]
             if(!file.startsWith('/')) file = '/' + file
 
-            const path = this.url.getFolder() + file
+            const path = this.url.getFolder() ?? '/' + file
             const url = new Url(this.url.getOrigin() + path.replace(/\/\//, '/'))
             return url
         })

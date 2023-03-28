@@ -7,7 +7,7 @@ import { Logger } from './Class/Logger'
 const bootstrap = () => {
 	const crawler = new BaseCrawler( 
 		{ 
-			startUrl: 'https://vetoelektro.cz/', 
+			startUrl: 'https://vetoelektro.cz', 
 			maxPages: 10, 
 			maxAssets: 50, 
 			maxDepth: 2, 

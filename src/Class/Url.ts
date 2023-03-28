@@ -22,7 +22,7 @@ export class Url {
         if (this.isValid) {
             this._protocol = Url.extractProtocol(this._url)
             this._host = Url.extractHost(this._url)
-            this._origin = this._protocol && this._host ? this._protocol + this._host : null
+            this._origin = (this._protocol && this._host) ? (this._protocol + this._host) : null
             this._path = Url.extractPath(this._url)
             this._folder = Url.extractFolder(this._url)
             this._query = Url.extractQuery(this._url) || []
