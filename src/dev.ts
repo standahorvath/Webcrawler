@@ -7,7 +7,7 @@ import { Logger } from './Class/Logger'
 const bootstrap = () => {
 	const crawler = new BaseCrawler( 
 		{ 
-			startUrl: 'https://vetoelektro.cz', 
+			startUrl: 'https://trello.com', 
 			maxPages: 10, 
 			maxAssets: 50, 
 			maxDepth: 2, 
@@ -15,6 +15,9 @@ const bootstrap = () => {
 			followInternal: true, 
 			assetFolder: 'assets', 
 			debug: true, 
+			downloadRobotsTxt: true,
+			downloadSitemapXml: true,
+			maxSitemaps: 2,
 		})
 
 	crawler.run({
@@ -38,6 +41,21 @@ const bootstrap = () => {
 		onAssetError: (url: Asset, error: Error) => {
 			console.log(`Error loading asset: ${url}`)
 		},
+		onRobotsTxtLoaded: ({ asset, crawler, success }) => {
+			if(success){
+			console.log(`Robots.txt loaded: ${asset?.getUrl() ?? 'None'}`)
+			} else {
+				console.log(`Robots.txt not loaded`)
+			}
+		},
+		onSitemapXmlLoaded: ({ asset, crawler, success }) => {
+			if(success){
+			console.log(`Sitemap.xml loaded: ${asset?.getUrl() ?? 'None'} Code: ${asset?.getCode() ?? 'None'}`)
+			} else {
+				console.log(`Sitemap.xml not loaded`)
+			}
+		},
+
 		/*onQueueEmpty: ({ enqueuePage, enqueueAsset, crawler}) => {
 			console.log(`Queue empty`)
 		}*/

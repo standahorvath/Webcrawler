@@ -25,6 +25,9 @@ declare global {
         assetFolder?: string,
         maxThreads?: number,
         debug?: boolean,
+        downloadRobotsTxt?: boolean,
+        downloadSitemapXml?: boolean,
+        maxSitemaps?: number,
     }
 
     type CrawlerHooks = {
@@ -34,6 +37,8 @@ declare global {
         onAllAssetsLoaded?: ({ crawler }: { crawler: BaseCrawler }) => void,
         onPageError?: (url: Page, error: Error) => void,
         onAssetError?: (url: Asset, error: Error) => void,
+        onRobotsTxtLoaded?: ({ asset, crawler, success }: { asset: Asset | null, crawler: BaseCrawler, success:boolean }) => void,
+        onSitemapXmlLoaded?: ({ asset, crawler, success }: { asset: Asset | null, crawler: BaseCrawler, success:boolean }) => void,
         onQueueEmpty?: (
             {
                 enqueuePage?: (url: Url) => void,

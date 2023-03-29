@@ -4,6 +4,7 @@ import { absoluteUrl, relativeUrl, titleTag, metaTag } from '../Constants/Regex'
 export class Page {
     url: Url
     data: string | null
+    code: number | null
     loaded: boolean
     links: Url[]
     files: Url[]
@@ -11,6 +12,7 @@ export class Page {
     constructor(url: string | Url) {
         this.url = url instanceof Url ? url : new Url(url)
         this.data = null
+        this.code = null
         this.loaded = false
         this.links = [] as Url[]
         this.files = [] as Url[]
@@ -23,6 +25,9 @@ export class Page {
     }
     public getData(): string | null {
         return this.data
+    }
+    public getCode(): number | null {
+        return this.code
     }
     public getLinks(): Url[] {
         return this.links
@@ -38,6 +43,7 @@ export class Page {
     public async load({ onload = (page: Page) => { } } = {}): Promise<Page> {
         if (!this.loaded) {
             const response = await fetch(this.url.toString())
+            this.code = response.status
             this.data = await response.text()
             this.loaded = true
 

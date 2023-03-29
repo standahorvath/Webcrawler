@@ -44,20 +44,24 @@ export class BaseCrawler {
 		this.hooks = hooks
 
 		// Start crawling
-		if(this._settings.maxPages || 0 > 0){
-		this.crawlingPageRunner().then(() => {
-			if(this.hooks.onAllPagesLoaded) this.hooks.onAllPagesLoaded({ crawler: this })
-		})
-		} else {
-			if(this.hooks.onAllPagesLoaded) this.hooks.onAllPagesLoaded({ crawler: this })
-		}
-
-		if(this._settings.maxAssets || 0 > 0){
-			this.crawlingAssetRunner().then(() => {
-				if(this.hooks.onAllAssetsLoaded) this.hooks.onAllAssetsLoaded({ crawler: this })
+		if (this._settings.maxPages || 0 > 0) {
+			this.crawlingPageRunner().then(() => {
+				if (this.hooks.onAllPagesLoaded) this.hooks.onAllPagesLoaded({ crawler: this })
 			})
 		} else {
-			if(this.hooks.onAllAssetsLoaded) this.hooks.onAllAssetsLoaded({ crawler: this })
+			if (this.hooks.onAllPagesLoaded) this.hooks.onAllPagesLoaded({ crawler: this })
+		}
+
+		if (this._settings.maxAssets || 0 > 0) {
+			this.crawlingAssetRunner().then(() => {
+				if (this.hooks.onAllAssetsLoaded) this.hooks.onAllAssetsLoaded({ crawler: this })
+			})
+		} else {
+			if (this.hooks.onAllAssetsLoaded) this.hooks.onAllAssetsLoaded({ crawler: this })
+		}
+
+		if (this._settings.downloadRobotsTxt || this._settings.downloadSitemapXml) {
+			this.crawlingMeta(startingPage)
 		}
 
 		//onPageLoaded({ page: new Page(this._settings.startUrl), crawler: this })
@@ -66,10 +70,74 @@ export class BaseCrawler {
 
 	}
 
+	/**
+	 * Crawls the starting page's robots.txt and sitemap.xml files.
+	 * Calls the appropriate hooks when they are loaded.
+	 */
+	private async crawlingMeta(startingPage: Page): Promise<void> {
+		// Get the robots.txt and sitemap.xml URLs based on the starting page's origin.
+		const robotsTxtUrl = startingPage.getUrlObject().getOrigin() + "/robots.txt";
+		const sitemapXmlUrl = startingPage.getUrlObject().getOrigin() + "/sitemap.xml";
+		let foundSitemap = false
+
+		// Load the robots.txt file.
+		const robotsAsset = new Asset(robotsTxtUrl);
+		await robotsAsset.load();
+		const responseCode = robotsAsset.getCode() ?? 404;
+
+		// Call the onRobotsTxtLoaded hook with the appropriate parameters.
+		if (this.hooks.onRobotsTxtLoaded) {
+			this.hooks.onRobotsTxtLoaded({
+				crawler: this,
+				success: responseCode < 400,
+				asset: robotsAsset,
+			});
+		}
+
+		// If we're not downloading the sitemap.xml file, return early.
+		if (!this._settings.downloadSitemapXml) {
+			return;
+		}
+
+		// Parse the sitemap URLs from the robots.txt file.
+		const sitemaps = Asset.parseSitemapUrl(robotsAsset.getData()?.toString() ?? '');
+		if(sitemaps.length === 0){
+			sitemaps.push(sitemapXmlUrl);
+		}
+
+		// Loop through the sitemap URLs and load the first one that returns a success response code.
+		for (let i = 0; i < sitemaps.length && i < (this._settings.maxSitemaps ?? 1); i++) {
+			const sitemapUrl = sitemaps[i];
+			const sitemapAsset = new Asset(sitemapUrl);
+			await sitemapAsset.load();
+			const responseCode = sitemapAsset.getCode() ?? 404;
+			if (responseCode < 400) {
+				// Call the onSitemapXmlLoaded hook with the appropriate parameters.
+				if (this.hooks.onSitemapXmlLoaded) {
+					this.hooks.onSitemapXmlLoaded({
+						crawler: this,
+						success: true,
+						asset: sitemapAsset,
+					});
+				}
+				foundSitemap = true
+			}
+		}
+
+		// Call the onSitemapXmlLoaded hook with the appropriate parameters.
+		if (this.hooks.onSitemapXmlLoaded && !foundSitemap) {
+			this.hooks.onSitemapXmlLoaded({
+				crawler: this,
+				success: false,
+				asset: null,
+			});
+		}
+	}
+
 	private async crawlingPageRunner(): Promise<void> {
 
 		if (this._pagesCrawled.length >= (this._settings.maxPages || 100)) return Promise.resolve()
-		
+
 		this._pagesToFollow.forEach((page) => {
 			if (this._settings.followInternal) {
 				page.getInternalLinks().forEach((url) => {
@@ -94,7 +162,7 @@ export class BaseCrawler {
 				console.log(error)
 			})
 		}
-		
+
 		Promise.resolve()
 
 	}
@@ -127,7 +195,7 @@ export class BaseCrawler {
 		// Add page to crawled pages
 		this._pagesCrawled.push(page)
 		// Debug start
-		if(this._settings.debug) Logger.log("Starts new Page thread", "Threads: " + this._activeThreads)
+		if (this._settings.debug) Logger.log("Starts new Page thread", "Threads: " + this._activeThreads)
 
 		try {
 			// Load page
@@ -136,8 +204,8 @@ export class BaseCrawler {
 			this._pagesToFollow.push(page)
 			// Decrement active threads
 			this._activeThreads--
-			if(this._settings.debug) Logger.log("Page loaded", page.getUrl().toString(), LogLevel.Info)
-			if(this._settings.debug) Logger.log("End Page thread", "Threads: " + this._activeThreads)
+			if (this._settings.debug) Logger.log("Page loaded", page.getUrl().toString(), LogLevel.Info)
+			if (this._settings.debug) Logger.log("End Page thread", "Threads: " + this._activeThreads)
 			return Promise.resolve(page)
 		} catch (error) {
 			// Decrement active threads
@@ -155,7 +223,7 @@ export class BaseCrawler {
 		// Get next asset
 		const asset = this._assets.shift()
 		// Debug message
-		if(this._settings.debug) Logger.log("Starts new Asset thread", "Threads: " + this._activeThreads)
+		if (this._settings.debug) Logger.log("Starts new Asset thread", "Threads: " + this._activeThreads)
 		// Check if asset exists
 		if (!asset) return Promise.resolve()
 
@@ -166,8 +234,8 @@ export class BaseCrawler {
 			this._assetsCrawled.push(asset)
 			// Decrement active threads
 			this._activeThreads--
-			if(this._settings.debug) Logger.log("Asset loaded", asset.getUrl().toString(), LogLevel.Info)
-			if(this._settings.debug) Logger.log("End Asset thread", "Threads: " + this._activeThreads)
+			if (this._settings.debug) Logger.log("Asset loaded", asset.getUrl().toString(), LogLevel.Info)
+			if (this._settings.debug) Logger.log("End Asset thread", "Threads: " + this._activeThreads)
 			// Return asset
 			return Promise.resolve(asset)
 		} catch (error) {
@@ -207,9 +275,9 @@ export class BaseCrawler {
 	 */
 	public enquequePage(url: Url): void {
 		const comparable = url.getComparable()
-		if(this._pagesCrawled.find((page) => page.getUrlObject().getComparable() === comparable)) return
-		if(this._pages.find((page) => page.getUrlObject().getComparable() === comparable)) return
-		if(this._pagesToFollow.find((page) => page.getUrlObject().getComparable() === comparable)) return
+		if (this._pagesCrawled.find((page) => page.getUrlObject().getComparable() === comparable)) return
+		if (this._pages.find((page) => page.getUrlObject().getComparable() === comparable)) return
+		if (this._pagesToFollow.find((page) => page.getUrlObject().getComparable() === comparable)) return
 		this._pages.push(new Page(url))
 	}
 
@@ -218,8 +286,8 @@ export class BaseCrawler {
 	 * @param url Url to enqueue
 	 */
 	public enquequeAsset(url: Url): void {
-		if(this._assetsCrawled.find((asset) => asset.getUrl().toString() === url.toString())) return
-		if(this._assets.find((asset) => asset.getUrl().toString() === url.toString())) return
+		if (this._assetsCrawled.find((asset) => asset.getUrl().toString() === url.toString())) return
+		if (this._assets.find((asset) => asset.getUrl().toString() === url.toString())) return
 		this._assets.push(new Asset(url))
 	}
 }
