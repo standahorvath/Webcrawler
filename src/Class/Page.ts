@@ -146,13 +146,31 @@ export class Page {
         clearedData = clearedData.replace(/<script(?:\s+[^>]*?)?(?:\s+type=(['"])(text\/javascript|application\/javascript)\1)?[\s\S]*?<\/script>/gi, '');
         clearedData = clearedData.replace(/<style(?:\s+[^>]*?)?(?:\s+type=(['"])(text\/css)\1|\s+id=['"]\w+['"])?[\s\S]*?<\/style>/gi, '');
 
-        return [...clearedData.matchAll(relativeUrl)].map((match) => {
+        return [...clearedData.matchAll(relativeUrl)].filter((match) => {
+            const file = match[1]
+
+            // Filter out some not real links
+            if(file.startsWith('#')) return false
+            if(file.startsWith('javascript:')) return false
+            if(file.startsWith('mailto:')) return false
+            if(file.startsWith('tel:')) return false
+            if(file.startsWith('data:')) return false
+            
+            return true
+        }).map((match) => {
             // match[1] is file path
             // /path/to/file
             let file = match[1]
-            if(!file.startsWith('/')) file = '/' + file
 
-            const path = this.url.getFolder() ?? '/' + file
+            if(file.startsWith('./')) file = file.replace('./', '')
+
+            let path = ''
+            if(!file.startsWith('/'))  {
+                file = '/' + file
+                path = (this.url.getFolder() ?? '') + file
+            } else {
+                path = file
+            }
             const url = new Url(this.url.getOrigin() + path.replace(/\/\//, '/'))
             return url
         })

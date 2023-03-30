@@ -18,6 +18,9 @@ export const emailExact = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(
 // Relative url Regex - Match relative url, case insensitive, match in middle of code
 export const relativeUrl = /(?:url\(|<(?:a|link|script|img)[^>]+(?:src|href)\s*=\s*)(?!['"]?(?:data|http))['"]?([^'"\)\s>]+)/gi
 
+// Relative links Regex - Match relative links, only links, case insensitive, match in middle of code
+export const relativeLinks = /(?:url\(|<(?:a)[^>]+(?:href)\s*=\s*)(?!['"]?(?:http))['"]?([^'"\)\s>]+)/gi
+
 // Meta tag Regex - Match meta tag, case insensitive, match in middle of code
 export const metaTag = /<meta[^>]+>/gi
 
