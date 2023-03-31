@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">8.08% </span>
+                <span class="strong">10.18% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/99</span>
+                <span class='fraction'>11/108</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.53% </span>
+                <span class="strong">11.11% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/26</span>
+                <span class='fraction'>3/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.87% </span>
+                <span class="strong">12.22% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/81</span>
+                <span class='fraction'>11/90</span>
             </div>
         
             
@@ -241,7 +241,26 @@
 <a name='L176'></a><a href='#L176'>176</a>
 <a name='L177'></a><a href='#L177'>177</a>
 <a name='L178'></a><a href='#L178'>178</a>
-<a name='L179'></a><a href='#L179'>179</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -253,6 +272,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -289,12 +314,25 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -429,6 +467,9 @@ export class Page {
     loaded: boolean
     links: Url[]
     files: Url[]
+    _loadingStart: number
+    _loadingEnd: number
+    ttfb: number
 &nbsp;
     constructor(url: string | Url) {
         this.url = url instanceof Url ? url : <span class="branch-1 cbranch-no" title="branch not covered" >new Url(url)</span>
@@ -437,6 +478,9 @@ export class Page {
         this.loaded = false
         this.links = [] as Url[]
         this.files = [] as Url[]
+        this._loadingStart = 0
+        this._loadingEnd = 0
+        this.ttfb = 0
     }
     public getUrl(): string {
         return this.url.toString()
@@ -463,17 +507,26 @@ export class Page {
      */
 <span class="fstat-no" title="function not covered" >    pu</span>blic async load({ onload = <span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >(p</span>age: Page) =&gt; { } </span>} = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span>: Promise&lt;Page&gt; {
 <span class="cstat-no" title="statement not covered" >        if (!this.loaded) {</span>
-            const response = <span class="cstat-no" title="statement not covered" >await fetch(this.url.toString())</span>
-<span class="cstat-no" title="statement not covered" >            this.code = response.status</span>
-<span class="cstat-no" title="statement not covered" >            this.data = await response.text()</span>
-<span class="cstat-no" title="statement not covered" >            this.loaded = true</span>
+<span class="cstat-no" title="statement not covered" >            this._loadingStart = Date.now()</span>
+<span class="cstat-no" title="statement not covered" >            try {</span>
+                const response = <span class="cstat-no" title="statement not covered" >await fetch(this.url.toString())</span>
+<span class="cstat-no" title="statement not covered" >                this.code = response.status</span>
+<span class="cstat-no" title="statement not covered" >                this.data = await response.text()</span>
+<span class="cstat-no" title="statement not covered" >                this.loaded = true</span>
+<span class="cstat-no" title="statement not covered" >                this._loadingEnd = Date.now()</span>
+<span class="cstat-no" title="statement not covered" >                this.ttfb = this._loadingEnd - this._loadingStart</span>
+    
+                const processedData = <span class="cstat-no" title="statement not covered" >this.processData() || { links: [], files: [] }</span>
+<span class="cstat-no" title="statement not covered" >                this.links = processedData.links</span>
+<span class="cstat-no" title="statement not covered" >                this.files = processedData.files</span>
 &nbsp;
-            const processedData = <span class="cstat-no" title="statement not covered" >this.processData() || { links: [], files: [] }</span>
-<span class="cstat-no" title="statement not covered" >            this.links = processedData.links</span>
-<span class="cstat-no" title="statement not covered" >            this.files = processedData.files</span>
+<span class="cstat-no" title="statement not covered" >                onload(this)</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            onload(this)</span>
+            } catch (error) {
+<span class="cstat-no" title="statement not covered" >                console.log(error)</span>
+            }
         }
+&nbsp;
 <span class="cstat-no" title="statement not covered" >        return this</span>
     }
 &nbsp;
@@ -485,6 +538,10 @@ export class Page {
 <span class="cstat-no" title="statement not covered" >        return this.links.filter(<span class="fstat-no" title="function not covered" >(u</span>rl) =&gt; <span class="cstat-no" title="statement not covered" >url.getHost() !== this.url.getHost())</span></span>
     }
 &nbsp;
+<span class="fstat-no" title="function not covered" >    pu</span>blic getTtfb(): number {
+<span class="cstat-no" title="statement not covered" >        return this.ttfb</span>
+    }
+&nbsp;
 <span class="fstat-no" title="function not covered" >    pu</span>blic getLang(): string | null {
 <span class="cstat-no" title="statement not covered" >        if (!this.loaded || this.data == null) <span class="cstat-no" title="statement not covered" >return null;</span></span>
         const match = <span class="cstat-no" title="statement not covered" >this.data.match(/&lt;html(?:\s+[^&gt;]*?)?\s+lang=["']([\w-]+)["']/i);</span>
@@ -493,9 +550,9 @@ export class Page {
     }
 &nbsp;
 <span class="fstat-no" title="function not covered" >    pu</span>blic getTitleTag(): string | null {
-<span class="cstat-no" title="statement not covered" >        if(!this.loaded || this.data == null) <span class="cstat-no" title="statement not covered" >return null</span></span>
+<span class="cstat-no" title="statement not covered" >        if (!this.loaded || this.data == null) <span class="cstat-no" title="statement not covered" >return null</span></span>
         const match = <span class="cstat-no" title="statement not covered" >this.data.match(titleTag)</span>
-<span class="cstat-no" title="statement not covered" >        if(match == null) <span class="cstat-no" title="statement not covered" >return null</span></span>
+<span class="cstat-no" title="statement not covered" >        if (match == null) <span class="cstat-no" title="statement not covered" >return null</span></span>
 <span class="cstat-no" title="statement not covered" >        return match[0].replace(/&lt;[^&gt;]*&gt;/g, '')</span>
     }
 &nbsp;
@@ -506,12 +563,12 @@ export class Page {
     }
 &nbsp;
 <span class="fstat-no" title="function not covered" >    pu</span>blic getMetaTags(): MetaTag[] {
-<span class="cstat-no" title="statement not covered" >        if(!this.loaded || this.data == null) <span class="cstat-no" title="statement not covered" >return [] as MetaTag[]</span></span>
+<span class="cstat-no" title="statement not covered" >        if (!this.loaded || this.data == null) <span class="cstat-no" title="statement not covered" >return [] as MetaTag[]</span></span>
         const matches = <span class="cstat-no" title="statement not covered" >this.data.matchAll(metaTag)</span>
-<span class="cstat-no" title="statement not covered" >        if(matches == null) <span class="cstat-no" title="statement not covered" >return [] as MetaTag[]</span></span>
+<span class="cstat-no" title="statement not covered" >        if (matches == null) <span class="cstat-no" title="statement not covered" >return [] as MetaTag[]</span></span>
         const metaTags: MetaTag[] = <span class="cstat-no" title="statement not covered" >[]</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        for(const match of matches) {</span>
+<span class="cstat-no" title="statement not covered" >        for (const match of matches) {</span>
             const nameAtribute = <span class="cstat-no" title="statement not covered" >match[0].match(/name=["'](.*?)["']/)</span>
             const nameAtributeValue = <span class="cstat-no" title="statement not covered" >nameAtribute == null ? '' : nameAtribute[0].replace(/name="/, '').replace(/"/, '')</span>
             const contentAtribute = <span class="cstat-no" title="statement not covered" >match[0].match(/content=["'](.*?)["']/)</span>
@@ -534,7 +591,7 @@ export class Page {
         const absoluteLinks = <span class="cstat-no" title="statement not covered" >this.processAbsoluteLinks() || [] as Url[]</span>
         const relativeLinks = <span class="cstat-no" title="statement not covered" >this.processRelativeLinks() || [] as Url[]</span>
         const allLinks = <span class="cstat-no" title="statement not covered" >[...absoluteLinks, ...relativeLinks]</span>
-        
+&nbsp;
 <span class="cstat-no" title="statement not covered" >        return {</span>
             links: allLinks.filter(<span class="fstat-no" title="function not covered" >(u</span>rl) =&gt; <span class="cstat-no" title="statement not covered" >url.isValid &amp;&amp; url.isPage)</span>,
             files: allLinks.filter(<span class="fstat-no" title="function not covered" >(u</span>rl) =&gt; <span class="cstat-no" title="statement not covered" >url.isValid &amp;&amp; url.isAsset)</span>
@@ -571,22 +628,22 @@ export class Page {
             const file = <span class="cstat-no" title="statement not covered" >match[1]</span>
 &nbsp;
             // Filter out some not real links
-<span class="cstat-no" title="statement not covered" >            if(file.startsWith('#')) <span class="cstat-no" title="statement not covered" >return false</span></span>
-<span class="cstat-no" title="statement not covered" >            if(file.startsWith('javascript:')) <span class="cstat-no" title="statement not covered" >return false</span></span>
-<span class="cstat-no" title="statement not covered" >            if(file.startsWith('mailto:')) <span class="cstat-no" title="statement not covered" >return false</span></span>
-<span class="cstat-no" title="statement not covered" >            if(file.startsWith('tel:')) <span class="cstat-no" title="statement not covered" >return false</span></span>
-<span class="cstat-no" title="statement not covered" >            if(file.startsWith('data:')) <span class="cstat-no" title="statement not covered" >return false</span></span>
-            
+<span class="cstat-no" title="statement not covered" >            if (file.startsWith('#')) <span class="cstat-no" title="statement not covered" >return false</span></span>
+<span class="cstat-no" title="statement not covered" >            if (file.startsWith('javascript:')) <span class="cstat-no" title="statement not covered" >return false</span></span>
+<span class="cstat-no" title="statement not covered" >            if (file.startsWith('mailto:')) <span class="cstat-no" title="statement not covered" >return false</span></span>
+<span class="cstat-no" title="statement not covered" >            if (file.startsWith('tel:')) <span class="cstat-no" title="statement not covered" >return false</span></span>
+<span class="cstat-no" title="statement not covered" >            if (file.startsWith('data:')) <span class="cstat-no" title="statement not covered" >return false</span></span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >            return true</span>
         }).map(<span class="fstat-no" title="function not covered" >(m</span>atch) =&gt; {
             // match[1] is file path
             // /path/to/file
             let file = <span class="cstat-no" title="statement not covered" >match[1]</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if(file.startsWith('./')) <span class="cstat-no" title="statement not covered" >file = file.replace('./', '')</span></span>
+<span class="cstat-no" title="statement not covered" >            if (file.startsWith('./')) <span class="cstat-no" title="statement not covered" >file = file.replace('./', '')</span></span>
 &nbsp;
             let path = <span class="cstat-no" title="statement not covered" >''</span>
-<span class="cstat-no" title="statement not covered" >            if(!file.startsWith('/'))  {</span>
+<span class="cstat-no" title="statement not covered" >            if (!file.startsWith('/')) {</span>
 <span class="cstat-no" title="statement not covered" >                file = '/' + file</span>
 <span class="cstat-no" title="statement not covered" >                path = (this.url.getFolder() ?? '') + file</span>
             } else {
@@ -604,7 +661,7 @@ export class Page {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-03-30T21:34:14.226Z
+                at 2023-03-31T13:56:49.899Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

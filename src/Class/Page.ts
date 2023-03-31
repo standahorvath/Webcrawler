@@ -8,6 +8,9 @@ export class Page {
     loaded: boolean
     links: Url[]
     files: Url[]
+    _loadingStart: number
+    _loadingEnd: number
+    ttfb: number
 
     constructor(url: string | Url) {
         this.url = url instanceof Url ? url : new Url(url)
@@ -16,6 +19,9 @@ export class Page {
         this.loaded = false
         this.links = [] as Url[]
         this.files = [] as Url[]
+        this._loadingStart = 0
+        this._loadingEnd = 0
+        this.ttfb = 0
     }
     public getUrl(): string {
         return this.url.toString()
@@ -42,17 +48,26 @@ export class Page {
      */
     public async load({ onload = (page: Page) => { } } = {}): Promise<Page> {
         if (!this.loaded) {
-            const response = await fetch(this.url.toString())
-            this.code = response.status
-            this.data = await response.text()
-            this.loaded = true
+            this._loadingStart = Date.now()
+            try {
+                const response = await fetch(this.url.toString())
+                this.code = response.status
+                this.data = await response.text()
+                this.loaded = true
+                this._loadingEnd = Date.now()
+                this.ttfb = this._loadingEnd - this._loadingStart
+    
+                const processedData = this.processData() || { links: [], files: [] }
+                this.links = processedData.links
+                this.files = processedData.files
 
-            const processedData = this.processData() || { links: [], files: [] }
-            this.links = processedData.links
-            this.files = processedData.files
+                onload(this)
 
-            onload(this)
+            } catch (error) {
+                console.log(error)
+            }
         }
+
         return this
     }
 
@@ -64,6 +79,10 @@ export class Page {
         return this.links.filter((url) => url.getHost() !== this.url.getHost())
     }
 
+    public getTtfb(): number {
+        return this.ttfb
+    }
+
     public getLang(): string | null {
         if (!this.loaded || this.data == null) return null;
         const match = this.data.match(/<html(?:\s+[^>]*?)?\s+lang=["']([\w-]+)["']/i);
@@ -72,9 +91,9 @@ export class Page {
     }
 
     public getTitleTag(): string | null {
-        if(!this.loaded || this.data == null) return null
+        if (!this.loaded || this.data == null) return null
         const match = this.data.match(titleTag)
-        if(match == null) return null
+        if (match == null) return null
         return match[0].replace(/<[^>]*>/g, '')
     }
 
@@ -85,12 +104,12 @@ export class Page {
     }
 
     public getMetaTags(): MetaTag[] {
-        if(!this.loaded || this.data == null) return [] as MetaTag[]
+        if (!this.loaded || this.data == null) return [] as MetaTag[]
         const matches = this.data.matchAll(metaTag)
-        if(matches == null) return [] as MetaTag[]
+        if (matches == null) return [] as MetaTag[]
         const metaTags: MetaTag[] = []
 
-        for(const match of matches) {
+        for (const match of matches) {
             const nameAtribute = match[0].match(/name=["'](.*?)["']/)
             const nameAtributeValue = nameAtribute == null ? '' : nameAtribute[0].replace(/name="/, '').replace(/"/, '')
             const contentAtribute = match[0].match(/content=["'](.*?)["']/)
@@ -113,7 +132,7 @@ export class Page {
         const absoluteLinks = this.processAbsoluteLinks() || [] as Url[]
         const relativeLinks = this.processRelativeLinks() || [] as Url[]
         const allLinks = [...absoluteLinks, ...relativeLinks]
-        
+
         return {
             links: allLinks.filter((url) => url.isValid && url.isPage),
             files: allLinks.filter((url) => url.isValid && url.isAsset)
@@ -150,22 +169,22 @@ export class Page {
             const file = match[1]
 
             // Filter out some not real links
-            if(file.startsWith('#')) return false
-            if(file.startsWith('javascript:')) return false
-            if(file.startsWith('mailto:')) return false
-            if(file.startsWith('tel:')) return false
-            if(file.startsWith('data:')) return false
-            
+            if (file.startsWith('#')) return false
+            if (file.startsWith('javascript:')) return false
+            if (file.startsWith('mailto:')) return false
+            if (file.startsWith('tel:')) return false
+            if (file.startsWith('data:')) return false
+
             return true
         }).map((match) => {
             // match[1] is file path
             // /path/to/file
             let file = match[1]
 
-            if(file.startsWith('./')) file = file.replace('./', '')
+            if (file.startsWith('./')) file = file.replace('./', '')
 
             let path = ''
-            if(!file.startsWith('/'))  {
+            if (!file.startsWith('/')) {
                 file = '/' + file
                 path = (this.url.getFolder() ?? '') + file
             } else {

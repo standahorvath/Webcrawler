@@ -204,7 +204,7 @@ export class BaseCrawler {
 			this._pagesToFollow.push(page)
 			// Decrement active threads
 			this._activeThreads--
-			if (this._settings.debug) Logger.log("Page loaded", page.getUrl().toString(), LogLevel.Info)
+			if (this._settings.debug) Logger.log("Page loaded", page.getUrl().toString() + " (TTFB: " + page.getTtfb() + ")", LogLevel.Info)
 			if (this._settings.debug) Logger.log("End Page thread", "Threads: " + this._activeThreads)
 			return Promise.resolve(page)
 		} catch (error) {
