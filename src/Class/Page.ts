@@ -111,9 +111,9 @@ export class Page {
 
         for (const match of matches) {
             const nameAtribute = match[0].match(/name=["'](.*?)["']/)
-            const nameAtributeValue = nameAtribute == null ? '' : nameAtribute[0].replace(/name="/, '').replace(/"/, '')
+            const nameAtributeValue = nameAtribute == null ? '' : nameAtribute[0].replace(/name=["']/, '').replace(/["']/, '')
             const contentAtribute = match[0].match(/content=["'](.*?)["']/)
-            const contentAtributeValue = contentAtribute == null ? '' : contentAtribute[0].replace(/content="/, '').replace(/"/, '')
+            const contentAtributeValue = contentAtribute == null ? '' : contentAtribute[0].replace(/content=["']/, '').replace(/["']/, '')
             metaTags.push({
                 name: nameAtributeValue,
                 content: contentAtributeValue

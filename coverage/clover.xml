@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1680271009949" clover="3.2.0">
-  <project timestamp="1680271009949" name="All files">
+<coverage generated="1680554459310" clover="3.2.0">
+  <project timestamp="1680554459311" name="All files">
     <metrics statements="195" coveredstatements="106" conditionals="121" coveredconditionals="46" methods="50" coveredmethods="22" elements="366" coveredelements="174" complexity="0" loc="195" ncloc="195" packages="3" files="4" classes="4"/>
     <package name="src.Class">
       <metrics statements="184" coveredstatements="95" conditionals="121" coveredconditionals="46" methods="50" coveredmethods="22"/>
-      <file name="Page.ts" path="C:\Users\Standa\Desktop\Work\Personal\WEBCRAWLER\src\Class\Page.ts">
+      <file name="Page.ts" path="C:\Users\Standa\Desktop\Work\Tonakodi\WebCrawler\src\Class\Page.ts">
         <metrics statements="90" coveredstatements="11" conditionals="62" coveredconditionals="1" methods="27" coveredmethods="3"/>
         <line num="16" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="17" count="2" type="stmt"/>
@@ -97,7 +97,7 @@
         <line num="193" count="0" type="stmt"/>
         <line num="194" count="0" type="stmt"/>
       </file>
-      <file name="Url.ts" path="C:\Users\Standa\Desktop\Work\Personal\WEBCRAWLER\src\Class\Url.ts">
+      <file name="Url.ts" path="C:\Users\Standa\Desktop\Work\Tonakodi\WebCrawler\src\Class\Url.ts">
         <metrics statements="94" coveredstatements="84" conditionals="59" coveredconditionals="45" methods="23" coveredmethods="19"/>
         <line num="19" count="71" type="stmt"/>
         <line num="20" count="71" type="stmt"/>
@@ -197,7 +197,7 @@
     </package>
     <package name="src.Constants">
       <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="Regex.ts" path="C:\Users\Standa\Desktop\Work\Personal\WEBCRAWLER\src\Constants\Regex.ts">
+      <file name="Regex.ts" path="C:\Users\Standa\Desktop\Work\Tonakodi\WebCrawler\src\Constants\Regex.ts">
         <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="4" count="3" type="stmt"/>
         <line num="7" count="3" type="stmt"/>
@@ -212,7 +212,7 @@
     </package>
     <package name="test.Data">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="Url.ts" path="C:\Users\Standa\Desktop\Work\Personal\WEBCRAWLER\test\Data\Url.ts">
+      <file name="Url.ts" path="C:\Users\Standa\Desktop\Work\Tonakodi\WebCrawler\test\Data\Url.ts">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="48" count="1" type="stmt"/>
