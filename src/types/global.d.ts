@@ -57,7 +57,8 @@ declare global {
     }
     type MetaTag = {
         name: string,
-        content: string
+        content: string,
+        property: string,
     }
 
 /*

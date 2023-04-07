@@ -114,9 +114,12 @@ export class Page {
             const nameAtributeValue = nameAtribute == null ? '' : nameAtribute[0].replace(/name=["']/, '').replace(/["']/, '')
             const contentAtribute = match[0].match(/content=["'](.*?)["']/)
             const contentAtributeValue = contentAtribute == null ? '' : contentAtribute[0].replace(/content=["']/, '').replace(/["']/, '')
+            const propertyAtribute = match[0].match(/property=["'](.*?)["']/)
+            const propertyAtributeValue = propertyAtribute == null ? '' : propertyAtribute[0].replace(/property=["']/, '').replace(/["']/, '')
             metaTags.push({
                 name: nameAtributeValue,
-                content: contentAtributeValue
+                content: contentAtributeValue,
+                property: propertyAtributeValue
             })
         }
 
