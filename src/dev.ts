@@ -8,7 +8,7 @@ const bootstrap = () => {
 	const crawler = new BaseCrawler( 
 		{ 
 			startUrl: 'https://svijanychallengecup.cz/', 
-			maxPages: 10, 
+			maxPages: 1, 
 			maxAssets: 50, 
 			maxDepth: 2, 
 			followExternal: false, 
@@ -25,6 +25,7 @@ const bootstrap = () => {
 			//console.log(`Page loaded: ${page.getUrl()}`)
 			//Logger.log("Page Title", page.getTitleTag() || "None", LogLevel.Info)
 			//Logger.log("Page Description", page.getMetaTag("description") || "None", LogLevel.Info)
+			console.log(Page.extractWords(page.getData() || ""))
 		},
 		onAllPagesLoaded: ({ crawler }) => {
 			console.log(`All pages loaded`)

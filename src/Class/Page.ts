@@ -198,4 +198,25 @@ export class Page {
         })
     }
 
+    public static extractWords(html: string): string {
+        // Remove head and script tags
+        let cleanHtml = html.replace(/<head[\s\S]*?<\/head>/gi, ' ')
+                            .replace(/<script[\s\S]*?<\/script>/gi, ' ');
+      
+        // Remove all remaining tags and attributes
+        cleanHtml = cleanHtml.replace(/<[^>]+>/g, '');
+      
+        // Remove all style blocks and attributes
+        cleanHtml = cleanHtml.replace(/style\s*=\s*"[^"]*"/gi, ' ')
+                            .replace(/<style[\s\S]*?<\/style>/gi, ' ');
+      
+        // Remove all comments and extra spaces
+        cleanHtml = cleanHtml.replace(/<!--[\s\S]*?-->/g, ' ').replace(/\s+/g, ' ').replace(/-->/g, ' ');
+
+        // Clean html all entities
+        cleanHtml = cleanHtml.replace(/&[^;]+;/g, '');
+      
+        // Trim whitespace and return the result
+        return cleanHtml.trim();
+      }
 }
