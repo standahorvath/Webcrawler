@@ -29,10 +29,16 @@ export class Asset {
 
 	public async load(): Promise<Asset> {
 		if (!this.loaded) {
+			
+            try {
 			const response = await fetch(this.url.toString())
 			this.code = response.status
 			this.data = await response.buffer()
 			this.loaded = true
+
+			} catch (error) {
+				// Load error
+			}
 		}
 		return this
 	}
