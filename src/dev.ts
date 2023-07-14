@@ -3,11 +3,12 @@ import { Url } from './Class/Url'
 import { Asset } from './Class/Asset'
 import { BaseCrawler } from './Crawlers/BaseCrawler'
 import { Logger } from './Class/Logger'
+import { Seo } from './Class/Seo'
 
 const bootstrap = () => {
 	const crawler = new BaseCrawler( 
 		{ 
-			startUrl: 'https://svijanychallengecup.cz/', 
+			startUrl: 'https://www.archiweb.cz/vladimir-balda-architekt', 
 			maxPages: 1, 
 			maxAssets: 50, 
 			maxDepth: 2, 
@@ -26,6 +27,8 @@ const bootstrap = () => {
 			//Logger.log("Page Title", page.getTitleTag() || "None", LogLevel.Info)
 			//Logger.log("Page Description", page.getMetaTag("description") || "None", LogLevel.Info)
 			console.log(Page.extractWords(page.getData() || ""))
+			console.log(Seo.extractHeadingTags(page.getData() || ""))
+			console.log(Seo.extractImagesWithoutAlt(page.getData() || ""))
 		},
 		onAllPagesLoaded: ({ crawler }) => {
 			console.log(`All pages loaded`)

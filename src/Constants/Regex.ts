@@ -26,3 +26,10 @@ export const metaTag = /<meta[^>]+>/gi
 
 // Title tag regex - Match title tag, case insensitive, match in middle of code
 export const titleTag = /<title[^>]*>([^<]+)<\/title>/gi
+
+// Get image tags missing alt atribute
+// example <img src="image.jpg"> 
+export const imagesWithoutAlt = /<img\b(?![^>]*\balt=)[^>]*>/gi
+
+// Get all heading tags, from H1 to H6
+export const headingTags = /<h[1-6][^>]*>([^<]+)<\/h[1-6]>/gi
